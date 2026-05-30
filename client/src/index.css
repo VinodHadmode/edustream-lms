@@ -1,1 +1,51 @@
-@import "tailwindcss"
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+
+@theme {
+  /* Brand colors */
+  --color-brand-primary: #A435F0;
+  --color-brand-hover: #8710D8;
+  --color-brand-light: #F0E6FF;
+
+  /* Background */
+  --color-bg: #FFFFFF;
+  --color-bg-dark: #0F0F0F;
+
+  /* Surface (cards, navbar) */
+  --color-surface: #F7F9FA;
+  --color-surface-dark: #1C1D1F;
+
+  /* Borders */
+  --color-border: #D1D7DC;
+  --color-border-dark: #3E4143;
+
+  /* Text */
+  --color-text-primary: #1C1D1F;
+  --color-text-secondary: #6A6F73;
+  --color-text-light: #F7F9FA;
+  --color-text-muted: #9CA3AF;
+
+  /* Font */
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text-primary font-sans;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-primary hover:bg-brand-hover text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-brand-primary text-brand-primary hover:bg-brand-light font-semibold px-4 py-2 rounded cursor-pointer transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-surface border border-border rounded-md;
+  }
+}
