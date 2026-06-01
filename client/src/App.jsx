@@ -1,11 +1,13 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import { Outlet } from "react-router";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      <Toaster position="top-center" />
       <main className="flex-1">
         {/* this is where home, about login page will show */}
         <Outlet />

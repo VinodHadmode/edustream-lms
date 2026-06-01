@@ -1,49 +1,84 @@
 import React from "react";
 import { BookOpen, UserCircle } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate, NavLink } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { userLoggedOut } from "../redux/authSlice";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const user = false;
+  const { user } = useSelector((store) => {
+    return store.auth;
+  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await fetch("http://localhost:3000/api/auth/user/logout", {
+      method: "GET",
+      credentials: "include",
+    });
+    dispatch(userLoggedOut());
+    toast.success("Logged out successfully!");
+    navigate("/");
+  };
+
+  const navLinkClass = ({ isActive }) => {
+    isActive
+      ? "text-white"
+      : "text-gray-400 hover:text-ehite transition-colors duration-200";
+  };
   return (
-    <div className="bg-gray-900 w-full sticky top-0 z-50">
+    <div className="bg-gray-900 w-full sticky top-0 z-50 border-b border-gray-800">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-6">
-        <div className="flex gap-1">
-          {/* logo section  */}
-          <Link to={"/"}>
-            <BookOpen className="text-gray-300 w-10 h-10" />
-            <h1 className="text-gray-300 text-3xl font-bold">EduFlow</h1>
-          </Link>
-        </div>
+        {/* logo section  */}
+        <Link to={"/"} className="flex items-center gap-2">
+          <BookOpen className="text-blue-400 w-8 h-8" />
+          <h1 className="text-white text-2xl font-bold">EduFlow</h1>
+        </Link>
 
         {/* menu section  */}
-        <ul className="flex gap-7 text-xl items-center font-semibold text-white">
-          <Link to={"/"}>
-            <li>Home</li>
-          </Link>
-          <Link to={"/courses"}>
-            <li>Courses</li>
-          </Link>
+        <ul className="flex gap-7 text-white items-center font-semibold">
+          <li>
+            <NavLink to={"/"} className={navLinkClass}>
+              Home
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink to={"/courses"} className={navLinkClass}>
+              Courses
+            </NavLink>
+          </li>
 
           {!user ? (
             <li className="flex gap-3">
-              <Link to={'/signup'}>
-                <button className="bg-blue-500 hover:bg-blue-600  text-white px-4 py-2 rounded">
+              <Link to={"/signup"}>
+                <button className="bg-blue-500 hover:bg-blue-600  text-white px-4 py-2 rounded transition-colors duration-200">
                   Signup
                 </button>
               </Link>
-              <Link to={'/login'}>
-                <button className="bg-gray-500 hover:bg-gray-800  text-white px-4 py-2 rounded">
+              <Link to={"/login"}>
+                <button className="bg-gray-500 hover:bg-gray-800  text-white px-4 py-2 rounded transition-colors duration-200">
                   Login
                 </button>
               </Link>
             </li>
           ) : (
-            <div>
-              <UserCircle className="w-8 h-8" />
-              <button className="bg-blue-500 hover:bg-blue-600 text-white">
+            <li className="flex items-center gap-4">
+              <span className="text-gray-400 text-sm hidden md:block">
+                Hi, {user?.name}
+              </span>
+              <Link to={"/profile"}>
+                <UserCircle className="w-8 h-8 text-gray-300 hover:text-white transition-colors duration-200" />
+              </Link>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors duration-200"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
-            </div>
+            </li>
           )}
         </ul>
       </div>

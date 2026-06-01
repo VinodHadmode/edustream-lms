@@ -1,5 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const { connectDB } = require("./config/db");
 const { userRouter } = require("./routes/user.route");
 
@@ -9,6 +11,13 @@ const app = express();
 
 //MW
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true, // allow cookies to be sent
+  }),
+);
 
 //routes
 app.use("/api/auth/user", userRouter);
