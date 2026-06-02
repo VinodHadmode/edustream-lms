@@ -7,6 +7,7 @@ const {
   updateProfile,
 } = require("../controllers/user.controller");
 const { isAuthenticated } = require("../middlewares/isAuthenticated");
+const { upload } = require("../middlewares/multer");
 
 const userRouter = express.Router();
 
@@ -18,7 +19,12 @@ userRouter.get("/logout", logout);
 
 userRouter.get("/profile", isAuthenticated, getProfile);
 
-userRouter.patch('/profile/update', isAuthenticated,updateProfile)
+userRouter.patch(
+  "/profile/update",
+  isAuthenticated,
+  upload.single("photo"),
+  updateProfile,
+);
 
 module.exports = {
   userRouter,

@@ -1,6 +1,8 @@
 const { UserModel } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { cloudinary } = require("../config/cloudinary");
+const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
 
 const register = async (req, res) => {
   try {
@@ -113,10 +115,9 @@ const updateProfile = async (req, res) => {
     const { name, description } = req.body;
     const userId = req.user._id;
 
-    // Add this temporarily at top of updateProfile
-    // console.log("req.user:", req.user);
-    // console.log("req.body:", req.body);
-    // console.log("req.cookies:", req.cookies);
+    let photoUrl = req.user.photoUrl;
+    let publicId = req.user.publicId;
+    // using this id to delete old photo
 
     if (!name && !description) {
       return res.status(400).json({
@@ -125,9 +126,22 @@ const updateProfile = async (req, res) => {
       });
     }
 
+    if (req.file) {
+      //delete old
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+
+      //upload new photo
+      const result = await uploadToCloudinary(req.file.buffer, "lms/profiles");
+
+      photoUrl = result.secure_url;
+      publicId = result.public_id;
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { name, description },
+      { name, description, photoUrl, publicId },
       { new: true },
     ).select("-password");
 
@@ -151,7 +165,6 @@ module.exports = {
   getProfile,
   updateProfile,
 };
-
 
 // import { v2 as cloudinary } from 'cloudinary';
 // import multer from 'multer';

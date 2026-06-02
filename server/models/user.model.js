@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     photoUrl: { type: String, default: "" },
     role: { type: String, enum: ["instructor", "student"], default: "student" },
     enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    publicId: { type: String, default: "" },
   },
   {
     timestamps: true,
