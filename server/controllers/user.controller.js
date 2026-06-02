@@ -82,7 +82,6 @@ const login = async (req, res) => {
       message: "Logged in successfully",
       user: userData,
     });
-
   } catch (error) {
     console.log(error);
     return res
@@ -99,8 +98,83 @@ const logout = (req, res) => {
   });
 };
 
+const getProfile = async (req, res) => {
+  try {
+    return res.status(200).json({ success: true, user: req.user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch profile" });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const userId = req.user._id;
+
+    // Add this temporarily at top of updateProfile
+    // console.log("req.user:", req.user);
+    // console.log("req.body:", req.body);
+    // console.log("req.cookies:", req.cookies);
+
+    if (!name && !description) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one field is required",
+      });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { name, description },
+      { new: true },
+    ).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update profile",
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
+  getProfile,
+  updateProfile,
 };
+
+
+// import { v2 as cloudinary } from 'cloudinary';
+// import multer from 'multer';
+// import streamifier from 'streamifier';
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
+
+// const upload = multer({ storage: multer.memoryStorage() });
+
+// app.post('/upload', upload.single('image'), (req, res) => {
+//   if (!req.file) return res.status(400).send('No file uploaded.');
+
+//   const uploadStream = cloudinary.uploader.upload_stream(
+//     { resource_type: 'image' },
+//     (error, result) => {
+//       if (error) return res.status(500).send(error);
+//       // Save result.url and result.public_id to your DB
+//       res.json({ url: result.url, public_id: result.public_id });
+//     }
+//   );
+//   streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+// });

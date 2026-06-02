@@ -2,8 +2,37 @@ import React from "react";
 import Navbar from "./components/Navbar";
 import { Outlet } from "react-router";
 import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { userLoggedIn, userLoggedOut } from "./redux/authSlice";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchUser()
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/user/profile", {
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      console.log("user data on load", data);
+
+      if (data.success) {
+        dispatch(userLoggedIn(data.user));
+      } else {
+        dispatch(userLoggedOut());
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(userLoggedOut());
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

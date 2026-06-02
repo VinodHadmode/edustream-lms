@@ -1,62 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import CourseCard from "../components/CourseCard";
 import userAvatar from "../assets/user.png";
 import { useSelector } from "react-redux";
 import { BookOpen, Mail, FileText, Edit } from "lucide-react";
 import { Link } from "react-router";
+import EditProfileModal from "../components/EditProfileModal";
+
+//temp
+//   const enrolledCourses = [];
+const enrolledCourses = [
+  {
+    id: 1,
+    title: "Complete MERN Stack Development",
+    description:
+      "Learn MongoDB, Express, React, and Node.js by building real-world applications.",
+    image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159",
+  },
+  {
+    id: 2,
+    title: "Advanced React.js",
+    description:
+      "Master hooks, context API, performance optimization, and scalable React architecture.",
+    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
+  },
+  {
+    id: 3,
+    title: "Node.js & Express Backend",
+    description:
+      "Build secure REST APIs, authentication systems, and backend services using Node.js.",
+    image: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613",
+  },
+];
 
 const Profile = () => {
-  const user = useSelector((store) => store.auth);
-
-  //temp
-  //   const enrolledCourses = [];
-  const enrolledCourses = [
-    {
-      id: 1,
-      title: "Complete MERN Stack Development",
-      description:
-        "Learn MongoDB, Express, React, and Node.js by building real-world applications.",
-      image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159",
-    },
-    {
-      id: 2,
-      title: "Advanced React.js",
-      description:
-        "Master hooks, context API, performance optimization, and scalable React architecture.",
-      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
-    },
-    {
-      id: 3,
-      title: "Node.js & Express Backend",
-      description:
-        "Build secure REST APIs, authentication systems, and backend services using Node.js.",
-      image: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613",
-    },
-    {
-      id: 4,
-      title: "UI Design with Tailwind CSS",
-      description:
-        "Design modern, responsive, and clean user interfaces using Tailwind CSS.",
-      image: "https://images.unsplash.com/photo-1545235617-9465d2a55698",
-    },
-    {
-      id: 5,
-      title: "JavaScript Data Structures & Algorithms",
-      description:
-        "Improve problem-solving skills and prepare for coding interviews using JavaScript.",
-      image: "https://images.unsplash.com/photo-1517430816045-df4b7de01c0d",
-    },
-    {
-      id: 6,
-      title: "Full-Stack Web Development Bootcamp",
-      description:
-        "A complete hands-on bootcamp covering frontend, backend, and deployment.",
-      image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
-    },
-  ];
+  const { user } = useSelector((store) => store.auth);
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
+      {/* modal  */}
+      {showModal && <EditProfileModal onClose={() => setShowModal(false)} />}
+
       {/* profile card  */}
       <div className="bg-gray-900 rounded-2xl p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8 mb-10">
         {/* avtar  */}
@@ -93,13 +77,13 @@ const Profile = () => {
 
         {/* edit  */}
         {/* Edit Button */}
-        <Link
-          to="/profile/edit"
+        <button
+          onClick={() => setShowModal(true)}
           className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors duration-200 shrink-0"
         >
           <Edit className="w-4 h-4" />
           Edit Profile
-        </Link>
+        </button>
       </div>
 
       {/* Enrolled course  */}

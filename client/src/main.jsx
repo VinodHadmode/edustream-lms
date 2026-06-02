@@ -7,7 +7,7 @@ import Courses from "./pages/Courses.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/auth/Login.jsx";
 import Signup from "./pages/auth/Signup.jsx";
-import { Provider } from 'react-redux'
+import { Provider } from "react-redux";
 import { store } from "./redux/store.js";
 import Profile from "./pages/Profile.jsx";
 
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         path: "signup",
         element: <Signup />,
       },
-       {
+      {
         path: "profile",
         element: <Profile />,
       },
@@ -40,8 +40,11 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <RouterProvider router={router} />
-  </Provider>,
+  <StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>,
 );
