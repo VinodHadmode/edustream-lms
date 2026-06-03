@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const { connectDB } = require("./config/db");
 const { userRouter } = require("./routes/user.route");
 const { authRouter } = require("./routes/auth.route");
+const { courseRouter } = require("./routes/course.route");
 
 const app = express();
 
@@ -21,8 +22,9 @@ app.use(
 );
 
 //routes
-app.use('/api/auth', authRouter)
+app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/course", courseRouter);
 
 //routes
 app.get("/", (req, res) => {

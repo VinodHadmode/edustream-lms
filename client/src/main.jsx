@@ -10,6 +10,8 @@ import Signup from "./pages/auth/Signup.jsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.js";
 import Profile from "./pages/Profile.jsx";
+import Dashboard from "./pages/instructor/Dashboard.jsx";
+import InstructorCourses from "./pages/instructor/InstructorCourses.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,14 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "instructor/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "instructor/courses",
+        element: <InstructorCourses />,
       },
       { path: "*", element: <>Page not found</> },
     ],
