@@ -3,7 +3,7 @@ import HeroImageGirl from '../assets/HeroImageGirl.webp'
 
 const Hero = () => {
   return (
-    <div className="bg-slate-800 min-h-screen pt-20">
+    <div className="bg-slate-800 min-h-screen">
       <div className="max-w-7xl mx-auto flex md:flex-row flex-col gap-10 items-center px-6 py-16">
 
         {/* text-section  */}

@@ -42,7 +42,7 @@ const EditProfileModal = ({ onClose }) => {
       console.log('form', form);
       
       const response = await fetch(
-        "http://localhost:3000/api/auth/user/profile-update",
+        "http://localhost:3000/api/user/profile-update",
         {
           method: "PATCH",
           credentials: "include",

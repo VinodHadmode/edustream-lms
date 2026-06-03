@@ -15,7 +15,7 @@ const App = () => {
 
   const fetchUser = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/user/profile", {
+      const res = await fetch("http://localhost:3000/api/user/profile", {
         credentials: "include",
       });
 

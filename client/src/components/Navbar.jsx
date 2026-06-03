@@ -28,6 +28,7 @@ const Navbar = () => {
       ? "text-white"
       : "text-gray-400 hover:text-ehite transition-colors duration-200";
   };
+
   return (
     <div className="bg-gray-900 w-full sticky top-0 z-50 border-b border-gray-800">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-6">
@@ -66,11 +67,16 @@ const Navbar = () => {
             </li>
           ) : (
             <li className="flex items-center gap-4">
-              <span className="text-gray-400 text-sm hidden md:block">
-                Hi, {user?.name}
-              </span>
-              <Link to={"/profile"}>
-                <UserCircle className="w-8 h-8 text-gray-300 hover:text-white transition-colors duration-200" />
+              <Link to="/profile">
+                {user?.photoUrl ? (
+                  <img
+                    src={user.photoUrl}
+                    alt={user.name}
+                    className="w-9 h-9 rounded-full object-cover border-2 border-blue-500 hover:border-blue-400 transition-colors duration-200"
+                  />
+                ) : (
+                  <UserCircle className="w-9 h-9 text-gray-300 hover:text-white transition-colors duration-200" />
+                )}
               </Link>
               <button
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors duration-200"
