@@ -20,11 +20,11 @@ userRouter.get("/logout", logout);
 userRouter.get("/profile", isAuthenticated, getProfile);
 
 userRouter.patch(
-  "/profile/update",
+  "/profile-update",
   isAuthenticated,
   upload.single("photo"),
   updateProfile,
-);
+); 
 
 module.exports = {
   userRouter,

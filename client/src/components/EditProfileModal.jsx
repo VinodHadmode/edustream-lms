@@ -1,6 +1,8 @@
 import { Camera, X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { userLoggedIn } from "../redux/authSlice";
 
 const EditProfileModal = ({ onClose }) => {
   const { user } = useSelector((store) => store.auth);
@@ -15,8 +17,55 @@ const EditProfileModal = ({ onClose }) => {
 
   const dispatch = useDispatch();
 
-  const handleChange = () => {};
-  const handlePhotoChange = () => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...formData, [name]: value }));
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setPhotoFile(file);
+    setPreviewPhoto(URL.createObjectURL(file)); //show preview
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("description", formData.description);
+      if (photoFile) form.append("photo", photoFile);
+
+      console.log('form', form);
+      
+      const response = await fetch(
+        "http://localhost:3000/api/auth/user/profile-update",
+        {
+          method: "PATCH",
+          credentials: "include",
+          body: form,
+        },
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message || "Update failed");
+        return;
+      }
+
+      dispatch(userLoggedIn(data.user));
+      toast.success("Profile updated!");
+      onClose();
+    } catch (error) {
+      toast.error("Something went wrong.");
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4"
@@ -38,7 +87,7 @@ const EditProfileModal = ({ onClose }) => {
         <h2 className="text-2xl font-bold text-white mb-6">Edit Profile</h2>
 
         {/* edit form  */}
-        <form className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* photo upload */}
           <div className="flex flex-col items-center gap-3">
             <div className="relative">
