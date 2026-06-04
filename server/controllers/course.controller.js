@@ -1,8 +1,10 @@
-const CourseModel =require('../models/course.model')
+const { CourseModel } = require("../models/course.model");
+const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
+
 //Create course
 const createCourse = async (req, res) => {
   try {
-    const { title, category } = req.body;
+    const { title, category, description, level, price } = req.body;
 
     if (!title || !category) {
       return res.status(400).json({
@@ -11,9 +13,27 @@ const createCourse = async (req, res) => {
       });
     }
 
+    let thumbnail = "";
+    let publicId = "";
+
+    if (req.file) {
+      const result = await uploadToCloudinary(
+        req.file.buffer,
+        "lms/thumbnails",
+      );
+
+      thumbnail = result.secure_url;
+      publicId = result.public_id;
+    }
+
     const course = await CourseModel.create({
       title,
       category,
+      description,
+      level: level || "beginner",
+      price:Number(price) || 0,
+      thumbnail,
+      publicId,
       instructor: req.user._id,
     });
 
@@ -61,7 +81,13 @@ const getCourseById = async (req, res) => {
 };
 
 //Update course
-const updateCourse = async (req, res) => {};
+const updateCourse = async (req, res) => {
+   try {
+    
+   } catch (error) {
+    
+   }
+};
 
 //Delete course
 const deleteCourse = async (req, res) => {};
@@ -71,8 +97,6 @@ const togglePublish = async (req, res) => {};
 
 //Get all published courses (for students)
 const getPublishedCourses = async (req, res) => {
-  try {
-  } catch (error) {}
 };
 
 module.exports = {
@@ -82,5 +106,5 @@ module.exports = {
   updateCourse,
   deleteCourse,
   togglePublish,
-  getPublishedCourses
+  getPublishedCourses,
 };

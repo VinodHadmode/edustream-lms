@@ -67,6 +67,9 @@ const Navbar = () => {
             </li>
           ) : (
             <li className="flex items-center gap-4">
+              {user?.role === "instructor" ? (
+                <Link to={"/instructor"}>Instructor</Link>
+              ) : null}
               <Link to="/profile">
                 {user?.photoUrl ? (
                   <img
