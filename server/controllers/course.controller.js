@@ -1,3 +1,4 @@
+const { cloudinary } = require("../config/cloudinary");
 const { CourseModel } = require("../models/course.model");
 const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
 
@@ -31,7 +32,7 @@ const createCourse = async (req, res) => {
       category,
       description,
       level: level || "beginner",
-      price:Number(price) || 0,
+      price: Number(price) || 0,
       thumbnail,
       publicId,
       instructor: req.user._id,
@@ -82,11 +83,58 @@ const getCourseById = async (req, res) => {
 
 //Update course
 const updateCourse = async (req, res) => {
-   try {
-    
-   } catch (error) {
-    
-   }
+  try {
+    const { title, description, category, level, price } = req.body;
+    const { courseId } = req.params;
+
+    const course = await CourseModel.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found." });
+    }
+
+    let thumbnail = course.thumbnail;
+    let publicId = course.publicId;
+
+    if (req.file) {
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+      const result = await uploadToCloudinary(
+        req.file.buffer,
+        "lms/thumbnails",
+      );
+
+      thumbnail = result.secure_url;
+      publicId = result.public_id;
+    }
+
+    const updatedCourse = await CourseModel.findByIdAndUpdate(
+      courseId,
+      {
+        title,
+        description,
+        category,
+        level,
+        price: Number(price),
+        thumbnail,
+        publicId,
+      },
+      { new: true },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Course Updated",
+      course: updatedCourse,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to update course" });
+  }
 };
 
 //Delete course
@@ -96,7 +144,105 @@ const deleteCourse = async (req, res) => {};
 const togglePublish = async (req, res) => {};
 
 //Get all published courses (for students)
-const getPublishedCourses = async (req, res) => {
+const getPublishedCourses = async (req, res) => {};
+
+//lecture controllers
+//add lecture to course
+const addLecture = async (req, res) => {
+  try {
+    const { title, isPreview } = req.body;
+    const { courseId } = req.params;
+
+    const course = await CourseModel.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not Authorized" });
+    }
+
+    let videoUrl = "";
+    let publicId = "";
+
+    if (req.file) {
+      const result = await uploadToCloudinary(
+        req.file.buffer,
+        "lms/lectures",
+        "video",
+      );
+      videoUrl = result.secure_url;
+      publicId = result.public_id;
+    }
+
+    course.lectures.push({
+      title,
+      videoUrl,
+      publicId,
+      isPreview: isPreview === "true",
+    });
+
+    await course.save();
+    return res
+      .status(201)
+      .json({ success: true, message: "Lecture added", course });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to add lecture",
+    });
+  }
+};
+
+//delete lecture
+const deleteLecture = async (req, res) => {
+  try {
+    const { courseId, lectureId } = req.params;
+
+    const course = await CourseModel.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not Authorized" });
+    }
+
+    //deleting lecture from cloudinary
+    const lecture = course.lectures.find((l) => l._id.toString() === lectureId);
+
+    // const lecture = course.lectures.id(lectureId);
+    // imp concepts of mongoose subdocument lookup
+
+    if (lecture?.publicId) {
+      await cloudinary.uploader.destroy(lecture.publicId, {
+        resource_type: "video",
+      });
+    }
+
+    course.lectures = course.lectures.filter(
+      (l) => l._id.toString() !== lectureId,
+    );
+
+    await course.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "Lecture deleted", course });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(200)
+      .json({ success: false, message: "Failed to delete lecture" });
+  }
 };
 
 module.exports = {
@@ -107,4 +253,6 @@ module.exports = {
   deleteCourse,
   togglePublish,
   getPublishedCourses,
+  addLecture,
+  deleteLecture,
 };

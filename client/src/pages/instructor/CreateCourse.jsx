@@ -20,6 +20,7 @@ const CreateCourse = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
+  
   const [formData, setFormData] = useState({
     title: "",
     description: "",
