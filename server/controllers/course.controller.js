@@ -138,13 +138,112 @@ const updateCourse = async (req, res) => {
 };
 
 //Delete course
-const deleteCourse = async (req, res) => {};
+const deleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = await CourseModel.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not Authorized" });
+    }
+
+    //Delete course thumbnail from cloudinary
+    if (course.publicId) {
+      await cloudinary.uploader.destroy(course.publicId);
+    }
+
+    //Delete course lectures from cloudinary
+    for (const lecture of course.lectures) {
+      if (lecture.publicId) {
+        await cloudinary.uploader.destroy(lecture.publicId, {
+          resource_type: "video",
+        });
+      }
+    }
+
+    await CourseModel.findByIdAndDelete(courseId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to delete course" });
+  }
+};
 
 //Toggle publish status
-const togglePublish = async (req, res) => {};
+const togglePublish = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = await CourseModel.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not Authorized" });
+    }
+
+    //Prevent publishing if no course added
+    if (!course.isPublished && course.lectures.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Add atleast one lecture before publishing",
+      });
+    }
+
+    course.isPublished = !course.isPublished;
+    await course.save();
+
+    return res.status(200).json({
+      success: true,
+      message: course.isPublished ? "Course published" : "Course unpublished",
+      course,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to toggle publish status" });
+  }
+};
 
 //Get all published courses (for students)
-const getPublishedCourses = async (req, res) => {};
+const getPublishedCourses = async (req, res) => {
+  try {
+    const courses = await CourseModel.find({ isPublished: true })
+      .populate("instructor", "name photoUrl")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      courses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch courses",
+    });
+  }
+};
 
 //lecture controllers
 //add lecture to course

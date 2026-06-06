@@ -195,6 +195,7 @@ const EditCourse = () => {
         toast.error(data.message || "Failed to delete course");
         return;
       }
+      
       let lecturesAfterDeletion = lectures.filter((l) => l._id !== lectureId);
       setLectures(lecturesAfterDeletion);
       toast.success("Lecture deleted");

@@ -17,9 +17,6 @@ const {
 
 const courseRouter = express.Router();
 
-//Student routes - need authMW
-courseRouter.get("/published", isAuthenticated, getPublishedCourses);
-courseRouter.get("/:courseId", isAuthenticated, getCourseById);
 
 //Instructor routes - need auth + isInstructor MW
 courseRouter.post(
@@ -48,6 +45,10 @@ courseRouter.patch(
   isInstructor,
   togglePublish,
 );
+
+//Student routes - need authMW
+courseRouter.get("/published", isAuthenticated, getPublishedCourses);
+courseRouter.get("/:courseId", isAuthenticated, getCourseById);
 
 //lecture routes
 courseRouter.post(

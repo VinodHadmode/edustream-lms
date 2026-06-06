@@ -15,6 +15,7 @@ import InstructorCourses from "./pages/instructor/InstructorCourses.jsx";
 import CreateCourse from "./pages/instructor/CreateCourse.jsx";
 import InstructorLayout from "./layouts/InstructorLayout.jsx";
 import EditCourse from "./pages/instructor/EditCourse.jsx";
+import CourseDetail from "./pages/student/CourseDetail.jsx";
 
 const router = createBrowserRouter([
   {
@@ -51,9 +52,11 @@ const router = createBrowserRouter([
           { path: "dashboard", element: <Dashboard /> },
           { path: "courses", element: <InstructorCourses /> },
           { path: "courses/create", element: <CreateCourse /> },
-          { path: "courses/update/:courseId", element: <EditCourse/> },
+          { path: "courses/update/:courseId", element: <EditCourse /> },
         ],
       },
+      { path: "course-detail/:courseId", element: <CourseDetail /> },
+
       { path: "*", element: <>Page not found</> },
     ],
   },

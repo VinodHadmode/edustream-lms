@@ -42,9 +42,61 @@ const InstructorCourses = () => {
     }
   };
 
-  const handleDelete = (id) => {};
+  const handleDelete = async (courseId) => {
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/course/${courseId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
-  const handleTogglePublish = (id) => {};
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message || "Failed to delete course");
+        return;
+      }
+
+      let coursesAfterDeletion = courses.filter((c) => c._id !== courseId);
+      setCourses(coursesAfterDeletion);
+      toast.success("Course deleted successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete course");
+      return;
+    }
+  };
+
+  const handleTogglePublish = async (courseId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/course/${courseId}/toggle-publish`,
+        {
+          method: "PATCH",
+          credentials: "include",
+        },
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message || "Failed to delete course");
+        return;
+      }
+
+      // Update local state instead of refetching
+      let coursesAfterTogglePublish = courses.map((c) => {
+        return c._id === courseId ? { ...c, isPublished: !c.isPublished } : c;
+      });
+      setCourses(coursesAfterTogglePublish);
+      toast.success(data.message || "Course deleted successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete course");
+      return;
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
@@ -127,7 +179,7 @@ const InstructorCourses = () => {
                 <div className="col-span-2 flex items-center justify-center gap-3">
                   {/* Toggle Publish */}
                   <button
-                    onClick={() => handleTogglePublish(course.id)}
+                    onClick={() => handleTogglePublish(course._id)}
                     title={course.isPublished ? "Unpublish" : "Publish"}
                     className="text-gray-400 hover:text-white transition-colors duration-200"
                   >
