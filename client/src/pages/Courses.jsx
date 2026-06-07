@@ -20,9 +20,9 @@ const Courses = () => {
     if (error) toast.error(error);
   }, [error]);
 
-  // const filtered=publishedCourses?.filter((c)=>{
-  //   return c.title.toLowerCase()
-  // })
+  const filtered = publishedCourses?.filter((c) => {
+    return c.title.toLowerCase().includes(search.toLowerCase());
+  });
 
   if (loading) {
     return (
@@ -58,15 +58,15 @@ const Courses = () => {
         </div>
 
         {/* Grid */}
-        {publishedCourses?.length > 0 ? (
+        {filtered?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {publishedCourses.map((course) => (
+            {filtered.map((course) => (
               <CourseCard key={course._id} course={course} />
             ))}
           </div>
         ) : (
           <div className="text-center text-gray-500 mt-20 text-lg">
-            No courses found
+            No courses found.
           </div>
         )}
       </div>

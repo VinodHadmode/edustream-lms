@@ -52,9 +52,17 @@ const Navbar = () => {
             </NavLink>
           </li>
 
+          {user?.role === "instructor" && (
+            <li>
+              <NavLink to="/instructor/dashboard" className={navLinkClass}>
+                Dashboard
+              </NavLink>
+            </li>
+          )}
+
           {!user ? (
             <li className="flex gap-3">
-              <Link to={"/signup"}>
+              <Link to="/signup">
                 <button className="bg-blue-500 hover:bg-blue-600  text-white px-4 py-2 rounded transition-colors duration-200">
                   Signup
                 </button>
@@ -67,9 +75,6 @@ const Navbar = () => {
             </li>
           ) : (
             <li className="flex items-center gap-4">
-              {user?.role === "instructor" ? (
-                <Link to={"/instructor"}>Instructor</Link>
-              ) : null}
               <Link to="/profile">
                 {user?.photoUrl ? (
                   <img

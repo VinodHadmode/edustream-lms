@@ -31,8 +31,6 @@ export const fetchInstructorCourses = createAsyncThunk(
       });
 
       const data = await response.json();
-      console.log("dataInInstructorThunk", data.courses);
-
       if (!response.ok) {
         return rejectWithValue(data.message);
       }
