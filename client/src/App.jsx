@@ -4,13 +4,17 @@ import { Outlet } from "react-router";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { userLoggedIn, userLoggedOut } from "./redux/authSlice";
+import {
+  authInitialized,
+  userLoggedIn,
+  userLoggedOut,
+} from "./redux/authSlice";
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchUser()
+    fetchUser();
   }, []);
 
   const fetchUser = async () => {
@@ -30,6 +34,8 @@ const App = () => {
     } catch (error) {
       console.log(error);
       dispatch(userLoggedOut());
+    } finally {
+      dispatch(authInitialized());
     }
   };
 

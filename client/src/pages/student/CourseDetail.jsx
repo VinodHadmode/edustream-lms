@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import {
   BarChart,
@@ -11,48 +11,24 @@ import {
   PlayCircle,
   Tag,
 } from "lucide-react";
+import { fetchCourseById } from "../../redux/courseSlice";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
 
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { currentCourse, loading } = useSelector((state) => state.course);
+  const { user } = useSelector((state) => state.auth);
 
   const isEnrolled = true;
 
   useEffect(() => {
-    fetchCourse();
-  }, []);
+    // fetchCourse();
+    dispatch(fetchCourseById(courseId));
+  }, [courseId]);
 
   const handleBuyNow = () => {};
-
-  const fetchCourse = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}`,
-        {
-          method: "GET",
-          credentials: "include",
-        },
-      );
-
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message || "Failed to fetch course");
-        return;
-      }
-      console.log("courseOnDetailPage", data.course);
-      setCourse(data.course);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to fetch course");
-      return;
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -62,7 +38,7 @@ const CourseDetail = () => {
     );
   }
 
-  if (!course) {
+  if (!currentCourse) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-400">Course not found</p>
@@ -78,29 +54,32 @@ const CourseDetail = () => {
           {/* thumbnail */}
           <img
             src={
-              course.thumbnail ||
+              currentCourse?.thumbnail ||
               "https://placehold.co/800x450/1e293b/94a3b8?text=No+Thumbnail"
             }
-            alt={course.title}
+            alt={currentCourse?.title || "Course Title"}
             className="w-full h-72 object-cover rounded-2xl"
           />
 
           {/* title + meta  */}
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-white">{course.title}</h1>
+            <h1 className="text-3xl font-bold text-white">
+              {currentCourse?.title}
+            </h1>
 
             <div className="flex flex-wrap gap-4 text-sm text-gray-400">
               <span className="flex items-center gap-1">
                 <BarChart2 className="w-4 h-4 text-blue-400" />
-                <span className="capitalize">{course.level}</span>
+                <span className="capitalize">{currentCourse?.level}</span>
               </span>
               <span className="flex items-center gap-1">
-                <Tag className="w-4 h-4 text-blue-400" /> {course.category}
+                <Tag className="w-4 h-4 text-blue-400" />{" "}
+                {currentCourse?.category}
               </span>
               <span className="flex items-center gap-1">
                 <BookOpen className="w-4 h-4 text-blue-400" />
-                {course?.lectures?.length} lecture
-                {course?.lectures?.length !== 1 ? "s" : ""}
+                {currentCourse?.lectures?.length} lecture
+                {currentCourse?.lectures?.length !== 1 ? "s" : ""}
               </span>
             </div>
           </div>
@@ -108,7 +87,7 @@ const CourseDetail = () => {
           {/* Description  */}
           <div className="text-xl font-bold text-gray-600 mb-3">
             <h2 className="text-gray-400 leading-relaxed">About this course</h2>
-            <p>{course.description || "No description provided"}</p>
+            <p>{currentCourse?.description || "No description provided"}</p>
           </div>
 
           {/* Instructor  */}
@@ -117,12 +96,12 @@ const CourseDetail = () => {
             <div className="flex items-center gap-4">
               <img
                 src={user.photoUrl}
-                alt={course.instructor?.name}
+                alt={currentCourse?.instructor?.name}
                 className="w-14 h-14 rounded-full object-cover border-2 border-blue-500"
               />
               <div>
                 <p className="text-white font-semibold">
-                  {course.instructor?.name}
+                  {currentCourse?.instructor?.name}
                 </p>
                 <p className="text-gray-400 text-sm">Instructor</p>
               </div>
@@ -132,11 +111,11 @@ const CourseDetail = () => {
           {/* Lecture list  */}
           <div>
             <h2 className="text-xl font-bold text-white mb-4">
-              Coruse Content
+              Course Content
             </h2>
             <div className="space-y-3">
-              {course?.lectures.length > 0 ? (
-                course.lectures.map((lecture, index) => {
+              {currentCourse?.lectures.length > 0 ? (
+                currentCourse.lectures.map((lecture, index) => {
                   return (
                     <div
                       key={lecture._id}
@@ -175,7 +154,9 @@ const CourseDetail = () => {
           <div className="bg-gray-900 rounded-2xl p-6 sticky top-24 space-y-5">
             {/* price  */}
             <div>
-              <p className="text-3xl font-bold text-white">₹{course.price}</p>
+              <p className="text-3xl font-bold text-white">
+                ₹{currentCourse?.price}
+              </p>
               <p className="text-gray-500 text-sm mt-1">One-time payment</p>
             </div>
 
@@ -198,15 +179,17 @@ const CourseDetail = () => {
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-blue-400" />
-                  {course.lectures.length} lectures
+                  {currentCourse?.lectures.length} lectures
                 </li>
                 <li className="flex items-center gap-2">
                   <BarChart2 className="w-4 h-4 text-blue-400" />
-                  <span className="capitalize">{course.level} level</span>
+                  <span className="capitalize">
+                    {currentCourse?.level} level
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-blue-400" />
-                  {course.category}
+                  {currentCourse?.category}
                 </li>
                 <li className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-blue-400" />

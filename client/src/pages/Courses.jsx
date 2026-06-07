@@ -1,40 +1,28 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+
 import CourseCard from "../components/CourseCard";
+import { fetchPublishedCourse } from "../redux/courseSlice";
 
 const Courses = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
+  const { publishedCourses, loading, error } = useSelector(
+    (state) => state.course,
+  );
 
   useEffect(() => {
-    fetchPublishedCourses();
+    dispatch(fetchPublishedCourse());
   }, []);
 
-  const fetchPublishedCourses = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/course/published",
-        {
-          method: "GET",
-          credentials: "include",
-        },
-      );
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message || "Failed to fetch course");
-        return;
-      }
-      setCourses(data.courses);
-    } catch (error) {
-      toast.error("Failed to fetch course");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  console.log("courses", courses);
+  // const filtered=publishedCourses?.filter((c)=>{
+  //   return c.title.toLowerCase()
+  // })
 
   if (loading) {
     return (
@@ -70,15 +58,15 @@ const Courses = () => {
         </div>
 
         {/* Grid */}
-        {courses.length > 0 ? (
+        {publishedCourses?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {courses.map((course) => (
+            {publishedCourses.map((course) => (
               <CourseCard key={course._id} course={course} />
             ))}
           </div>
         ) : (
           <div className="text-center text-gray-500 mt-20 text-lg">
-            No courses found for "<span className="text-white">{search}</span>"
+            No courses found
           </div>
         )}
       </div>

@@ -2,38 +2,25 @@ import React, { useEffect, useState } from "react";
 import Hero from "../components/Hero";
 import CourseCard from "../components/CourseCard";
 import { Link } from "react-router";
-
-const courses = [];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPublishedCourse } from "../redux/courseSlice";
 
 const Home = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const { publishedCourses, loading, error } = useSelector(
+    (state) => state.course,
+  );
 
   useEffect(() => {
-    fetchPublishedCourses();
+    dispatch(fetchPublishedCourse());
   }, []);
 
-  const fetchPublishedCourses = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/course/published",
-        {
-          credentials: "include",
-        },
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message || "Failed to fetch courses");
-        return;
-      }
-      setCourses(data.courses);
-    } catch (error) {
-      toast.error("Failed to fetch courses");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
+
+  const featuredCourse = publishedCourses?.slice(0, 3);
 
   return (
     <div>
@@ -63,9 +50,9 @@ const Home = () => {
           <div className="flex items-center justify-center h-48">
             <p className="text-gray-400">Loading courses...</p>
           </div>
-        ) : courses.length > 0 ? (
+        ) : featuredCourse.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {courses.map((course) => (
+            {featuredCourse.map((course) => (
               <CourseCard key={course._id} course={course} />
             ))}
           </div>

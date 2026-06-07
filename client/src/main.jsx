@@ -16,12 +16,17 @@ import CreateCourse from "./pages/instructor/CreateCourse.jsx";
 import InstructorLayout from "./layouts/InstructorLayout.jsx";
 import EditCourse from "./pages/instructor/EditCourse.jsx";
 import CourseDetail from "./pages/student/CourseDetail.jsx";
+import AuthRoute from "./components/AuthRoute.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import InstructorRoute from "./components/InstructorRoute.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      
+      //public routes
       {
         index: true,
         element: <Home />,
@@ -31,31 +36,44 @@ const router = createBrowserRouter([
         element: <Courses />,
       },
       {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "signup",
-        element: <Signup />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
+        path: "course-detail/:courseId",
+        element: <CourseDetail />,
       },
 
-      //instructor routes
+      //Auth routes
       {
-        path: "instructor",
-        element: <InstructorLayout />,
+        element: <AuthRoute />,
         children: [
-          { index: true, element: <Dashboard /> },
-          { path: "dashboard", element: <Dashboard /> },
-          { path: "courses", element: <InstructorCourses /> },
-          { path: "courses/create", element: <CreateCourse /> },
-          { path: "courses/update/:courseId", element: <EditCourse /> },
+          {
+            path: "login",
+            element: <Login />,
+          },
+          {
+            path: "signup",
+            element: <Signup />,
+          },
         ],
       },
-      { path: "course-detail/:courseId", element: <CourseDetail /> },
+
+      //Protected routes - redirect to login if not loggedIn
+      {
+        element: <ProtectedRoute />,
+        children: [{ path: "profile", element: <Profile /> }],
+      },
+
+      //Instructor routes - redirects to / if not intructor
+      {
+        element: <InstructorRoute />,
+        children: [
+          { path: "instructor/dashboard", element: <Dashboard /> },
+          { path: "instructor/courses", element: <InstructorCourses /> },
+          { path: "instructor/courses/create", element: <CreateCourse /> },
+          {
+            path: "instructor/courses/:courseId",
+            element: <EditCourse />,
+          },
+        ],
+      },
 
       { path: "*", element: <>Page not found</> },
     ],

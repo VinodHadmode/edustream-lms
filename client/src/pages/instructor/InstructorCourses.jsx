@@ -11,36 +11,20 @@ import { useState } from "react";
 import { Link } from "react-router";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchInstructorCourses,
+  removeCourse,
+  toggleCoursePublish,
+} from "../../redux/courseSlice";
 
 const InstructorCourses = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { instructorCourses, loading } = useSelector((state) => state.course);
 
   useEffect(() => {
-    getInstructorCourses();
+    dispatch(fetchInstructorCourses());
   }, []);
-
-  const getInstructorCourses = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("http://localhost:3000/api/course", {
-        method: "GET",
-        credentials: "include",
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message || "Failed to fetch instructor courses");
-        return;
-      }
-      // console.log("courses", data.courses);
-      setCourses(data.courses);
-    } catch (error) {
-      toast.error("Failed to fetch instructor courses");
-      return;
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDelete = async (courseId) => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
@@ -59,9 +43,8 @@ const InstructorCourses = () => {
         return;
       }
 
-      let coursesAfterDeletion = courses.filter((c) => c._id !== courseId);
-      setCourses(coursesAfterDeletion);
-      toast.success("Course deleted successfully");
+      dispatch(removeCourse(courseId)); //local update
+      toast.success("Course deleted");
     } catch (error) {
       console.log(error);
       toast.error("Failed to delete course");
@@ -86,14 +69,11 @@ const InstructorCourses = () => {
       }
 
       // Update local state instead of refetching
-      let coursesAfterTogglePublish = courses.map((c) => {
-        return c._id === courseId ? { ...c, isPublished: !c.isPublished } : c;
-      });
-      setCourses(coursesAfterTogglePublish);
-      toast.success(data.message || "Course deleted successfully");
+      dispatch(toggleCoursePublish(courseId));
+      toast.success(data.message);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete course");
+      toast.error("Failed to update course");
       return;
     }
   };
@@ -105,7 +85,7 @@ const InstructorCourses = () => {
         <div>
           <h1 className="text-3xl font-bold text-white">My Courses</h1>
           <p className="text-gray-400 text-sm mt-1">
-            {courses?.length} Course created
+            {instructorCourses?.length} Course created
           </p>
         </div>
         <Link
@@ -118,7 +98,7 @@ const InstructorCourses = () => {
       </div>
 
       {/* course table  */}
-      {courses?.length > 0 ? (
+      {instructorCourses?.length > 0 ? (
         <div className="bg-gray-900 rounded-2xl overflow-hidden">
           {/* table header  */}
           <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-700 text-gray-400 text-sm font-semibold uppercase">
@@ -130,7 +110,7 @@ const InstructorCourses = () => {
           </div>
 
           {/* table rows  */}
-          {courses?.map((course) => {
+          {instructorCourses?.map((course) => {
             return (
               <div
                 key={course._id}

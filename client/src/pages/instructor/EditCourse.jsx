@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import {
   ArrowLeft,
   PlusCircle,
@@ -8,8 +10,7 @@ import {
   Upload,
   Video,
 } from "lucide-react";
-import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { fetchCourseById } from "../../redux/courseSlice";
 
 const categories = [
   "Web Development",
@@ -27,6 +28,9 @@ const categories = [
 const EditCourse = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { currentCourse, loading } = useSelector((state) => state.course);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -54,8 +58,23 @@ const EditCourse = () => {
 
   //fetch course on mount
   useEffect(() => {
-    fetchCourse();
-  }, []);
+    dispatch(fetchCourseById(courseId));
+  }, [dispatch, courseId]);
+
+  useEffect(() => {
+    if (currentCourse) {
+      setFormData({
+        title: currentCourse.title || "",
+        description: currentCourse.description || "",
+        category: currentCourse.category || "",
+        level: currentCourse.level || "beginner",
+        price: currentCourse.price || "",
+      });
+      setThumbnailPreview(currentCourse.thumbnail || null);
+      setLectures(currentCourse.lectures || []);
+      setIsFetching(false);
+    }
+  }, [currentCourse]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -102,39 +121,6 @@ const EditCourse = () => {
       toast.error("Somehing went wrong");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const fetchCourse = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}`,
-        {
-          method: "GET",
-          credentials: "include",
-        },
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message || "Failed to fetch course");
-        return;
-      }
-      const c = data.course;
-
-      setFormData({
-        title: c.title || "",
-        description: c.description || "",
-        category: c.category || "",
-        level: c.level || "beginner",
-        price: c.price || "",
-      });
-      setThumbnailPreview(c.thumbnail || null);
-      setLectures(c.lectures || []);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to fetch course");
-    } finally {
-      setIsFetching(false);
     }
   };
 
@@ -195,7 +181,7 @@ const EditCourse = () => {
         toast.error(data.message || "Failed to delete course");
         return;
       }
-      
+
       let lecturesAfterDeletion = lectures.filter((l) => l._id !== lectureId);
       setLectures(lecturesAfterDeletion);
       toast.success("Lecture deleted");
@@ -204,7 +190,7 @@ const EditCourse = () => {
     }
   };
 
-  if (isFetching) {
+  if (isFetching || loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-400">Loading course...</p>
