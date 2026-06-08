@@ -9,7 +9,7 @@ import { fetchInstructorCourses } from "../redux/courseSlice";
 
 const Profile = () => {
   const [showModal, setShowModal] = useState(false);
-  
+
   const { user } = useSelector((store) => store.auth);
   const { instructorCourses } = useSelector((store) => store.course);
 
@@ -22,7 +22,6 @@ const Profile = () => {
       dispatch(fetchInstructorCourses());
     }
   }, [user]);
-
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -109,6 +108,7 @@ const Profile = () => {
           )}
         </div>
       ) : (
+        //Student - enrolled course
         <div>
           <div className="flex items-center gap-2 mb-6">
             <BookOpen className="text-blue-400 w-5 h-5" />
@@ -121,7 +121,13 @@ const Profile = () => {
           {enrolledCourses?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {enrolledCourses.map((course) => {
-                return <CourseCard key={course._id} course={course} />;
+                return (
+                  <CourseCard
+                    key={course._id}
+                    course={course}
+                    enrolled={true}
+                  />
+                );
               })}
             </div>
           ) : (

@@ -17,10 +17,6 @@ const Home = () => {
     dispatch(fetchPublishedCourse());
   }, []);
 
-  // useEffect(() => {
-  //   if (error) toast.error(error);
-  // }, [error]);
-
   const featuredCourse = publishedCourses?.slice(0, 3);
 
   return (

@@ -9,6 +9,7 @@ const { userRouter } = require("./routes/user.route");
 const { authRouter } = require("./routes/auth.route");
 const { courseRouter } = require("./routes/course.route");
 const { paymentRouter } = require("./routes/payment.route");
+const { courseProgressRouter } = require("./routes/couresProgress.route");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/payment", paymentRouter);
+app.use("/api/progress", courseProgressRouter);
 
 //routes
 app.get("/", (req, res) => {

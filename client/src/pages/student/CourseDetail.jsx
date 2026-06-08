@@ -113,7 +113,10 @@ const CourseDetail = () => {
 
   //check if student enrolled already
   const isEnrolled =
-    user && currentCourse?.enrolledStudents?.includes(user._id);
+    user &&
+    currentCourse?.enrolledStudents?.some((id) => {
+      return id.toString() === user._id.toString();
+    });
 
   if (loading) {
     return (
@@ -180,7 +183,7 @@ const CourseDetail = () => {
             <h2 className="text-xl font-bold text-white mb-4">Instructor</h2>
             <div className="flex items-center gap-4">
               <img
-                src={user.photoUrl}
+                src={user?.photoUrl}
                 alt={currentCourse?.instructor?.name}
                 className="w-14 h-14 rounded-full object-cover border-2 border-blue-500"
               />

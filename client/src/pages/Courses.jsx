@@ -16,10 +16,6 @@ const Courses = () => {
     dispatch(fetchPublishedCourse());
   }, []);
 
-  // useEffect(() => {
-  //   if (error) toast.error(error);
-  // }, [error]);
-
   const filtered = publishedCourses?.filter((c) => {
     return c.title.toLowerCase().includes(search.toLowerCase());
   });

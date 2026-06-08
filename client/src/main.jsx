@@ -19,13 +19,13 @@ import CourseDetail from "./pages/student/CourseDetail.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import InstructorRoute from "./components/InstructorRoute.jsx";
+import CourseProgress from "./pages/student/CourseProgress.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      
       //public routes
       {
         index: true,
@@ -58,7 +58,10 @@ const router = createBrowserRouter([
       //Protected routes - redirect to login if not loggedIn
       {
         element: <ProtectedRoute />,
-        children: [{ path: "profile", element: <Profile /> }],
+        children: [
+          { path: "profile", element: <Profile /> },
+          { path: "course-progress/:courseId", element: <CourseProgress /> },
+        ],
       },
 
       //Instructor routes - redirects to / if not intructor

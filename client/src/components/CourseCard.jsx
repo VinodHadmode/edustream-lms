@@ -1,9 +1,13 @@
 import React from "react";
 import { Link } from "react-router";
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, enrolled = false }) => {
+  const path = enrolled
+    ? `/course-progress/${course._id}`
+    : `/course-detail/${course._id}`;
+
   return (
-    <Link to={`/course-detail/${course._id}`}>
+    <Link to={path}>
       <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transition-all duration-300 cursor-pointer h-full flex flex-col">
         {/* Thumbnail */}
         <img
