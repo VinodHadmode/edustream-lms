@@ -6,7 +6,14 @@ const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
 
 const getProfile = async (req, res) => {
   try {
-    return res.status(200).json({ success: true, user: req.user });
+    const user = await UserModel.findById(req.user._id)
+      .select("-password")
+      .populate({
+        path: "enrolledCourses",
+        populate: { path: "instructor", select: "name photoUrl" },
+      });
+
+    return res.status(200).json({ success: true, user });
   } catch (error) {
     return res
       .status(500)

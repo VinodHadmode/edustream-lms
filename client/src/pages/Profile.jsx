@@ -1,40 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CourseCard from "../components/CourseCard";
 import userAvatar from "../assets/user.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BookOpen, Mail, FileText, Edit } from "lucide-react";
 import { Link } from "react-router";
 import EditProfileModal from "../components/EditProfileModal";
-
-//temp
-//   const enrolledCourses = [];
-const enrolledCourses = [
-  {
-    id: 1,
-    title: "Complete MERN Stack Development",
-    description:
-      "Learn MongoDB, Express, React, and Node.js by building real-world applications.",
-    image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159",
-  },
-  {
-    id: 2,
-    title: "Advanced React.js",
-    description:
-      "Master hooks, context API, performance optimization, and scalable React architecture.",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
-  },
-  {
-    id: 3,
-    title: "Node.js & Express Backend",
-    description:
-      "Build secure REST APIs, authentication systems, and backend services using Node.js.",
-    image: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613",
-  },
-];
+import { fetchInstructorCourses } from "../redux/courseSlice";
 
 const Profile = () => {
-  const { user } = useSelector((store) => store.auth);
   const [showModal, setShowModal] = useState(false);
+  
+  const { user } = useSelector((store) => store.auth);
+  const { instructorCourses } = useSelector((store) => store.course);
+
+  const dispatch = useDispatch();
+
+  const enrolledCourses = user?.enrolledCourses || [];
+
+  useEffect(() => {
+    if (user?.role === "instructor") {
+      dispatch(fetchInstructorCourses());
+    }
+  }, [user]);
+
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -86,38 +74,73 @@ const Profile = () => {
         </button>
       </div>
 
-      {/* Enrolled course  */}
-      <div>
-        <div className="flex items-center gap-2 mb-6">
-          <BookOpen className="text-blue-400 w-5 h-5" />
-          <h2 className="text-xl font-bold text-white">Enrolled Course</h2>
-          <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full ml-1">
-            {enrolledCourses.length}
-          </span>
-        </div>
+      {/* Enrolled or Created course  */}
+      {user?.role === "instructor" ? (
+        <div>
+          {/* instructor - show created course  */}
+          <div className="flex items-center gap-2 mb-6">
+            <BookOpen className="text-blue-400 w-5 h-5" />
+            <h2 className="text-xl font-bold text-white">My created Courses</h2>
+            <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full ml-1">
+              {instructorCourses?.length}
+            </span>
+          </div>
 
-        {enrolledCourses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {enrolledCourses.map((course) => {
-              return <CourseCard key={course.id} course={course} />;
-            })}
+          {instructorCourses?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {instructorCourses.map((course) => {
+                return <CourseCard key={course._id} course={course} />;
+              })}
+            </div>
+          ) : (
+            <div className="bg-gray-900 rounded-2xl p-12 text-center">
+              <BookOpen className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-400 font-medium mb-1">No courses yet</p>
+              <p className="text-gray-600 text-sm mb-6">
+                Courses you enroll in will appear here
+              </p>
+              <Link
+                to="/courses"
+                className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-6 py-2 rounded-lg transition-colors duration-200"
+              >
+                Browse Courses
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>
+          <div className="flex items-center gap-2 mb-6">
+            <BookOpen className="text-blue-400 w-5 h-5" />
+            <h2 className="text-xl font-bold text-white">Enrolled Course</h2>
+            <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full ml-1">
+              {enrolledCourses.length}
+            </span>
           </div>
-        ) : (
-          <div className="bg-gray-900 rounded-2xl p-12 text-center">
-            <BookOpen className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 font-medium mb-1">No courses yet</p>
-            <p className="text-gray-600 text-sm mb-6">
-              Courses you enroll in will appear here
-            </p>
-            <Link
-              to="/courses"
-              className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-6 py-2 rounded-lg transition-colors duration-200"
-            >
-              Browse Courses
-            </Link>
-          </div>
-        )}
-      </div>
+
+          {enrolledCourses?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {enrolledCourses.map((course) => {
+                return <CourseCard key={course._id} course={course} />;
+              })}
+            </div>
+          ) : (
+            <div className="bg-gray-900 rounded-2xl p-12 text-center">
+              <BookOpen className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-400 font-medium mb-1">No courses yet</p>
+              <p className="text-gray-600 text-sm mb-6">
+                Courses you enroll in will appear here
+              </p>
+              <Link
+                to="/courses"
+                className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-6 py-2 rounded-lg transition-colors duration-200"
+              >
+                Browse Courses
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -6,8 +6,8 @@ import { userLoggedOut } from "../redux/authSlice";
 import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const { user } = useSelector((store) => {
-    return store.auth;
+  const { user } = useSelector((state) => {
+    return state.auth;
   });
 
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const Navbar = () => {
   const navLinkClass = ({ isActive }) => {
     isActive
       ? "text-white"
-      : "text-gray-400 hover:text-ehite transition-colors duration-200";
+      : "text-gray-400 hover:text-white transition-colors duration-200";
   };
 
   return (

@@ -6,14 +6,15 @@ import { userLoggedIn } from "../redux/authSlice";
 
 const EditProfileModal = ({ onClose }) => {
   const { user } = useSelector((store) => store.auth);
+  
+  const [photoFile, setPhotoFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [previewPhoto, setPreviewPhoto] = useState(user?.photoUrl || null);
+  
   const [formData, setFormData] = useState({
     name: user?.name || "",
     description: user?.description || "",
   });
-
-  const [previewPhoto, setPreviewPhoto] = useState(user?.photoUrl || null);
-  const [photoFile, setPhotoFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
