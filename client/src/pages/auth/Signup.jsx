@@ -80,11 +80,12 @@ const Signup = () => {
               Email
             </label>
             <input
-              type="text"
+              type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              required
               placeholder="Enter your email"
               className="bg-slate-700 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />

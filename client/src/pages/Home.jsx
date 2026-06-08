@@ -4,6 +4,7 @@ import CourseCard from "../components/CourseCard";
 import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPublishedCourse } from "../redux/courseSlice";
+import toast from "react-hot-toast";
 
 const Home = () => {
   // const [search, setSearch] = useState("");
@@ -16,9 +17,9 @@ const Home = () => {
     dispatch(fetchPublishedCourse());
   }, []);
 
-  useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) toast.error(error);
+  // }, [error]);
 
   const featuredCourse = publishedCourses?.slice(0, 3);
 

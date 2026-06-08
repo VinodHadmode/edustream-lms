@@ -18,17 +18,102 @@ const CourseDetail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { currentCourse, loading } = useSelector((state) => state.course);
   const { user } = useSelector((state) => state.auth);
-
-  const isEnrolled = true;
+  const { currentCourse, loading } = useSelector((state) => state.course);
 
   useEffect(() => {
     // fetchCourse();
     dispatch(fetchCourseById(courseId));
   }, [courseId]);
 
-  const handleBuyNow = () => {};
+  const handleBuyNow = async () => {
+    if (!user) {
+      toast.error("/Please login to purchase this course.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      //step 1 - Create order on backend
+      const response = await fetch(
+        "http://localhost:3000/api/payment/create-order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ courseId }),
+        },
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message || "Failed to initiate payment");
+        return;
+      }
+
+      //Step 2 - Open Razorpay checkout
+      const options = {
+        key: data.key,
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: "EduFlow",
+        description: data.course.title,
+        image: data.course.thumbnail,
+        order_id: data.order.id,
+
+        //Step 3 - On payment success
+        handler: async (response) => {
+          console.log("Razorpay response in handler:", response);
+
+          try {
+            const verifyRes = await fetch(
+              "http://localhost:3000/api/payment/verify",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              },
+            );
+
+            const verifyData = await verifyRes.json();
+            if (verifyData.success) {
+              toast.success("Payment successfull! Enjoy your course.");
+              navigate(`/course-progress/${courseId}`);
+            }
+          } catch (error) {
+            toast.error("Something went wrong during verification");
+          }
+        },
+
+        prefill: {
+          name: user.name,
+          email: user.email,
+          contact: "9999999999",
+        },
+
+        theme: { color: "#3b82f6" },
+      };
+
+      const rzp = new window.Razorpay(options);
+      // Handle payment failure
+      rzp.on("payment.failed", () => {
+        toast.error("Payment failed. Please try again.");
+      });
+
+      rzp.open();
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  //check if student enrolled already
+  const isEnrolled =
+    user && currentCourse?.enrolledStudents?.includes(user._id);
 
   if (loading) {
     return (
@@ -162,11 +247,17 @@ const CourseDetail = () => {
 
             {/* CTA button */}
             {isEnrolled ? (
-              <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200">
+              <button
+                onClick={() => navigate(`/course-progress/${courseId}`)}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+              >
                 Go to Course
               </button>
             ) : (
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200">
+              <button
+                onClick={handleBuyNow}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+              >
                 Buy Now
               </button>
             )}
