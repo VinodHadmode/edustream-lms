@@ -81,11 +81,6 @@ const verifyPayment = async (req, res) => {
       .update(body)
       .digest("hex");
 
-    // Add these logs
-    console.log("expected:", expectedSignature);
-    console.log("received:", razorpay_signature);
-    console.log("match:", expectedSignature === razorpay_signature);
-
     //verify signature
     if (expectedSignature !== razorpay_signature) {
       return res

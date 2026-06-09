@@ -64,7 +64,7 @@ const updateProfile = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to update profile",
+      message: error.message ||  "Failed to update profile",
       // message: error.message,
     });
   }

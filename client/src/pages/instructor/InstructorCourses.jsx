@@ -172,7 +172,7 @@ const InstructorCourses = () => {
 
                   {/* Edit */}
                   <Link
-                    to={`/instructor/courses/update/${course._id}`}
+                    to={`/instructor/courses/${course._id}`}
                     className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
                     title="Edit"
                   >

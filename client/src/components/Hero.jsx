@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import HeroImageGirl from "../assets/HeroImageGirl.webp";
+import Students from "../assets/Students.webp";
 import { useNavigate } from "react-router";
 
 const Hero = () => {
@@ -22,7 +22,7 @@ const Hero = () => {
         {/* image section  */}
         <div className="flex-1 flex justify-center">
           <img
-            src={HeroImageGirl}
+            src={Students}
             alt="Hero"
             className="max-w-sm md:max-w-md w-full object-contain"
           />

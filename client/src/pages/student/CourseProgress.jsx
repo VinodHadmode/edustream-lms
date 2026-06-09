@@ -123,7 +123,7 @@ const CourseProgress = () => {
           <div className="w-40 bg-gray-700 rounded-full h-2">
             <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${completionPercentage}%` }}
+              style={{ width: `${completionPercentage()}%` }}
             />
           </div>
           <span className="text-gray-400 text-sm font-medium">
@@ -166,7 +166,8 @@ const CourseProgress = () => {
                     {course?.lectures.findIndex(
                       (l) =>
                         l._id?.toString() === currentLecture._id?.toString(),
-                    )}
+                    ) + 1}{" "}
+                    of {course.lectures.length}
                   </p>
                 </div>
                 <button
@@ -215,6 +216,7 @@ const CourseProgress = () => {
                 return (
                   <div
                     key={lecture._id}
+                    onClick={() => setCurrentLecture(lecture)}
                     className={`flex items-center gap-3 px-5 py-4 cursor-pointer transition-colors duration-150 ${isActive ? "bg-blue-500/10 border-l-2 border-blue-500" : "hover:bg-gray-800"}`}
                   >
                     {/* Complete indicator  */}
