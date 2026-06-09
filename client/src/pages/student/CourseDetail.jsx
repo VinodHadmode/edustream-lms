@@ -238,61 +238,63 @@ const CourseDetail = () => {
         </div>
 
         {/* right side  */}
-        <div className="lg:w-80 shrink-0">
-          <div className="bg-gray-900 rounded-2xl p-6 sticky top-24 space-y-5">
-            {/* price  */}
-            <div>
-              <p className="text-3xl font-bold text-white">
-                ₹{currentCourse?.price}
-              </p>
-              <p className="text-gray-500 text-sm mt-1">One-time payment</p>
-            </div>
+        {user?.role !== "instructor" && (
+          <div className="lg:w-80 shrink-0">
+            <div className="bg-gray-900 rounded-2xl p-6 sticky top-24 space-y-5">
+              {/* price  */}
+              <div>
+                <p className="text-3xl font-bold text-white">
+                  ₹{currentCourse?.price}
+                </p>
+                <p className="text-gray-500 text-sm mt-1">One-time payment</p>
+              </div>
 
-            {/* CTA button */}
-            {isEnrolled ? (
-              <button
-                onClick={() => navigate(`/course-progress/${courseId}`)}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
-              >
-                Go to Course
-              </button>
-            ) : (
-              <button
-                onClick={handleBuyNow}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
-              >
-                Buy Now
-              </button>
-            )}
+              {/* CTA button */}
+              {isEnrolled ? (
+                <button
+                  onClick={() => navigate(`/course-progress/${courseId}`)}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+                >
+                  Go to Course
+                </button>
+              ) : (
+                <button
+                  onClick={handleBuyNow}
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+                >
+                  Buy Now
+                </button>
+              )}
 
-            {/* course includes  */}
-            <div className="border-t border-gray-700 pt-5 space-y-3">
-              <p className="text-white font-semibold text-sm">
-                This course includes:
-              </p>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-blue-400" />
-                  {currentCourse?.lectures.length} lectures
-                </li>
-                <li className="flex items-center gap-2">
-                  <BarChart2 className="w-4 h-4 text-blue-400" />
-                  <span className="capitalize">
-                    {currentCourse?.level} level
-                  </span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-blue-400" />
-                  {currentCourse?.category}
-                </li>
-                <li className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-blue-400" />
-                  Full lifetime access
-                </li>
-              </ul>
+              {/* course includes  */}
+              <div className="border-t border-gray-700 pt-5 space-y-3">
+                <p className="text-white font-semibold text-sm">
+                  This course includes:
+                </p>
+                <ul className="space-y-2 text-gray-400 text-sm">
+                  <li className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-blue-400" />
+                    {currentCourse?.lectures.length} lectures
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <BarChart2 className="w-4 h-4 text-blue-400" />
+                    <span className="capitalize">
+                      {currentCourse?.level} level
+                    </span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-blue-400" />
+                    {currentCourse?.category}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-blue-400" />
+                    Full lifetime access
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

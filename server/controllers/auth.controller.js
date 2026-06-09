@@ -1,5 +1,5 @@
-const jwt=require('jsonwebtoken')
-const bcrypt=require('bcrypt')
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { UserModel } = require("../models/user.model");
 
 const register = async (req, res) => {
@@ -91,7 +91,10 @@ const login = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+  });
   return res.status(200).json({
     success: true,
     message: "Logged out successfully",

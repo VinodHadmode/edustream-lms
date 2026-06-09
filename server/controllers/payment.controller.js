@@ -15,6 +15,14 @@ const createOrder = async (req, res) => {
     const { courseId } = req.body;
     const userId = req.user._id;
 
+    // Block instructors from purchasing
+    if (req.user.role === "instructor") {
+      return res.status(403).json({
+        success: false,
+        message: "Instructors cannot purchase courses",
+      });
+    }
+
     const course = await CourseModel.findById(courseId);
     if (!course) {
       return res

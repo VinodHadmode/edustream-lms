@@ -14,7 +14,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3000/api/auth/user/logout", {
+    await fetch("http://localhost:3000/api/auth/logout", {
       method: "GET",
       credentials: "include",
     });

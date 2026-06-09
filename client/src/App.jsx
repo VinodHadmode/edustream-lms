@@ -24,7 +24,7 @@ const App = () => {
       });
 
       const data = await res.json();
-      console.log("user data on load", data);
+      console.log("getProfile response:", data);
 
       if (data.success) {
         dispatch(userLoggedIn(data.user));
