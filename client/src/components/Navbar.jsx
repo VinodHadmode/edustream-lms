@@ -27,7 +27,7 @@ const Navbar = () => {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `text-sm font-medium ${isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600"} transition-colors`;
+    `text-lg font-medium ${isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600"} transition-colors`;
 
   return (
     <header className="sticky top-0 bg-white shadow-md">
@@ -61,13 +61,13 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-sm font-medium text-gray-600 hover:text-blue-600"
+                  className="text-lg font-medium text-gray-600 hover:text-blue-600"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md"
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-lg font-medium px-4 py-2 rounded-md"
                 >
                   Signup
                 </Link>
@@ -87,7 +87,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-sm font-medium text-red-600 hover:text-red-700"
+                  className="text-lg font-medium text-red-600 hover:text-red-700"
                 >
                   Logout
                 </button>

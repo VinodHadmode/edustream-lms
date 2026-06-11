@@ -3,14 +3,8 @@ import Students from "../assets/Students.webp";
 import { useNavigate } from "react-router";
 
 const Hero = () => {
-  const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-    navigate(`/courses?search=${query}`);
-  };
 
   return (
     <div className="bg-slate-50 border-b border-slate-200">
@@ -24,22 +18,7 @@ const Hero = () => {
             Learn from expert instructors and build real-world skills today.
           </p>
 
-          {/* search  */}
-          <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              placeholder="Search courses.."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button
-              type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
-            >
-              Search
-            </button>
-          </form>
+          
         </div>
 
         {/* image section  */}

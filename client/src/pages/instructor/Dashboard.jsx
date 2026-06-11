@@ -120,7 +120,7 @@ const Dashboard = () => {
       </div>
 
       {/* Course Performance Table */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="px-6 py-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">
             Course Performance
