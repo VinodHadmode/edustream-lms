@@ -29,58 +29,60 @@ const stats = [
 
 const Dashboard = () => {
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      {/* Header  */}
-      <div className="flex items-center justify-between mb-10">
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="text-2xl font-bold text-gray-900">
             Instructor Dashboard
           </h1>
-          <p className="text-gray-400 text-sm mt-1">Manage your course</p>
+          <p className="text-sm text-gray-600">
+            Manage your courses and performance
+          </p>
         </div>
+
         <Link
-          to={"/instructor/courses"}
-          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200"
+          to="/instructor/courses/create"
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg transition"
         >
-          {" "}
-          <PlusCircle className="w-5 h-5" />
-          New Course
+          + New Course
         </Link>
       </div>
 
-      {/* stat  */}
+      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-        {stats.map((stat) => {
-          return (
-            <div
-              key={stat.label}
-              className="bg-gray-900 rounded-2xl p-6 flex items-center gap-5"
-            >
-              <div className={`${stat.bg} p-4 rounded-xl`}>
-                <stat.icon className={`w-6 h-6 ${stat.color}`} />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">{stat.label}</p>
-                <p className="text-white text-2xl font-bold">{stat.value}</p>
-              </div>
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="bg-white border border-gray-200 rounded-2xl p-6 flex items-center gap-5 shadow-sm"
+          >
+            <div className={`${stat.bg} p-4 rounded-xl`}>
+              <stat.icon className={`w-6 h-6 ${stat.color}`} />
             </div>
-          );
-        })}
+
+            <div>
+              <p className="text-gray-600 text-sm">{stat.label}</p>
+              <p className="text-gray-900 text-2xl font-bold">{stat.value}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* QUick links  */}
-      <div className="bg-gray-900 rounded-2xl p-6">
-        <h2 className="text-lg font-bold text-white mb-4">Quick Actions</h2>
+      {/* Quick Actions */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
+
         <div className="flex flex-wrap gap-3">
           <Link
             to="/instructor/courses"
-            className="bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+            className="border border-gray-300 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition"
           >
             View My Courses
           </Link>
+
           <Link
             to="/instructor/courses/create"
-            className="bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+            className="border border-gray-300 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition"
           >
             Create New Course
           </Link>

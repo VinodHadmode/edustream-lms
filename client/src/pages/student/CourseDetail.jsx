@@ -22,7 +22,6 @@ const CourseDetail = () => {
   const { currentCourse, loading } = useSelector((state) => state.course);
 
   useEffect(() => {
-    // fetchCourse();
     dispatch(fetchCourseById(courseId));
   }, [courseId]);
 
@@ -111,6 +110,8 @@ const CourseDetail = () => {
     }
   };
 
+  console.log("currentCourse", currentCourse);
+
   //check if student enrolled already
   const isEnrolled =
     user &&
@@ -120,85 +121,87 @@ const CourseDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400">Loading course...</p>
+      <div className="flex justify-center py-20">
+        <p className="text-sm text-slate-500">Loading course...</p>
       </div>
     );
   }
 
   if (!currentCourse) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400">Course not found</p>
+      <div className="flex justify-center py-20">
+        <p className="text-sm text-slate-500">Course not found</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="flex flex-col lg:flex-row gap-10">
-        {/* left -main content */}
-        <div className="flex-1 space-y-8">
+        {/* left content */}
+        <div className="flex-1 space-y-10">
           {/* thumbnail */}
-          <img
-            src={
-              currentCourse?.thumbnail ||
-              "https://placehold.co/800x450/1e293b/94a3b8?text=No+Thumbnail"
-            }
-            alt={currentCourse?.title || "Course Title"}
-            className="w-full h-72 object-cover rounded-2xl"
-          />
+          <div className="rounded-2xl overflow-hidden border border-slate-200 bg-white">
+            <img
+              src={
+                currentCourse?.thumbnail ||
+                "https://placehold.co/800x450/1e293b/94a3b8?text=No+Thumbnail"
+              }
+              alt={currentCourse?.title || "Course Title"}
+              className="w-full h-72 object-cover"
+            />
+          </div>
 
           {/* title + meta  */}
-          <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-white">
+          <div className="space-y-3">
+            <h1 className="text-2xl md:text-3xl font-semibold text-slate-900">
               {currentCourse?.title}
             </h1>
 
-            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+            <div className="flex flex-wrap gap-4 text-sm text-slate-500">
               <span className="flex items-center gap-1">
-                <BarChart2 className="w-4 h-4 text-blue-400" />
+                <BarChart2 className="w-4 h-4 text-indigo-600" />
                 <span className="capitalize">{currentCourse?.level}</span>
               </span>
               <span className="flex items-center gap-1">
-                <Tag className="w-4 h-4 text-blue-400" />{" "}
+                <Tag className="w-4 h-4 text-indigo-600" />{" "}
                 {currentCourse?.category}
               </span>
               <span className="flex items-center gap-1">
-                <BookOpen className="w-4 h-4 text-blue-400" />
-                {currentCourse?.lectures?.length} lecture
-                {currentCourse?.lectures?.length !== 1 ? "s" : ""}
+                <BookOpen className="w-4 h-4 text-indigo-600" />
+                {currentCourse?.lectures?.length} lectures
               </span>
             </div>
           </div>
 
-          {/* Description  */}
-          <div className="text-xl font-bold text-gray-600 mb-3">
-            <h2 className="text-gray-400 leading-relaxed">About this course</h2>
-            <p>{currentCourse?.description || "No description provided"}</p>
-          </div>
-
           {/* Instructor  */}
-          <div className="bg-gray-900 rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Instructor</h2>
-            <div className="flex items-center gap-4">
-              <img
-                src={user?.photoUrl}
-                alt={currentCourse?.instructor?.name}
-                className="w-14 h-14 rounded-full object-cover border-2 border-blue-500"
-              />
-              <div>
-                <p className="text-white font-semibold">
-                  {currentCourse?.instructor?.name}
-                </p>
-                <p className="text-gray-400 text-sm">Instructor</p>
-              </div>
-            </div>
+          <div className="flex items-center gap-3 mt-6">
+            <img
+              src={user?.photoUrl}
+              alt={currentCourse?.instructor?.name}
+              className="w-10 h-10 rounded-full object-cover border-slate-200"
+            />
+            <p className="text-sm text-slate-600">
+              Created by{" "}
+              <span className="font-medium text-slate-900 hover:underline cursor-pointer">
+                {currentCourse?.instructor?.name}Instructor
+              </span>
+            </p>
           </div>
 
-          {/* Lecture list  */}
+          {/* Description  */}
           <div>
-            <h2 className="text-xl font-bold text-white mb-4">
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">
+              About this course
+            </h2>
+            <p className="text-slate-600 text-sm leading-relaxed">
+              {currentCourse?.description || "No description provided"}
+            </p>
+          </div>
+
+          {/* Course Content  */}
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
               Course Content
             </h2>
             <div className="space-y-3">
@@ -207,23 +210,23 @@ const CourseDetail = () => {
                   return (
                     <div
                       key={lecture._id}
-                      className="flex items-center justify-between bg-gray-900 rounded-xl px-5 py-4"
+                      className="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-5 py-4"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="bg-blue-500/10 p-2 rounded-lg">
+                        <div className="bg-slate-100 p-2 rounded-lg">
                           {lecture.isPreview ? (
-                            <PlayCircle className="w-5 h-5 text-gray-500" />
+                            <PlayCircle className="w-5 h-5 text-slate-500" />
                           ) : (
-                            <Lock className="w-5 h-5 text-gray-500" />
+                            <Lock className="w-5 h-5 text-slate-500" />
                           )}
                         </div>
-                        <p className="text-gray-300 text-sm font-medium">
+                        <p className="text-slate-700 text-sm font-medium">
                           {index + 1}. {lecture.title}
                         </p>
                       </div>
 
                       {lecture?.isPreview && (
-                        <span className="text-xs text-blue-400 font-semibold bg-blue-500/10 px-3 py-1 rounded-full">
+                        <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
                           Free Preview
                         </span>
                       )}
@@ -231,7 +234,7 @@ const CourseDetail = () => {
                   );
                 })
               ) : (
-                <p className="text-gray-500 text-sm">No lectures added yet.</p>
+                <p className="text-slate-500 text-sm">No lectures added yet.</p>
               )}
             </div>
           </div>
@@ -240,54 +243,54 @@ const CourseDetail = () => {
         {/* right side  */}
         {user?.role !== "instructor" && (
           <div className="lg:w-80 shrink-0">
-            <div className="bg-gray-900 rounded-2xl p-6 sticky top-24 space-y-5">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 sticky top-24 space-y-5">
               {/* price  */}
               <div>
-                <p className="text-3xl font-bold text-white">
+                <p className="text-2xl font-semibold text-slate-900">
                   ₹{currentCourse?.price}
                 </p>
-                <p className="text-gray-500 text-sm mt-1">One-time payment</p>
+                <p className="text-slate-500 text-sm mt-1">One-time payment</p>
               </div>
 
               {/* CTA button */}
               {isEnrolled ? (
                 <button
                   onClick={() => navigate(`/course-progress/${courseId}`)}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium py-3 rounded-lg transition"
                 >
                   Go to Course
                 </button>
               ) : (
                 <button
                   onClick={handleBuyNow}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-3 rounded-lg transition"
                 >
                   Buy Now
                 </button>
               )}
 
-              {/* course includes  */}
-              <div className="border-t border-gray-700 pt-5 space-y-3">
-                <p className="text-white font-semibold text-sm">
+              {/* Includes  */}
+              <div className="border-t border-slate-200 pt-5">
+                <p className="text-slate-900 font-medium text-sm mb-3">
                   This course includes:
                 </p>
-                <ul className="space-y-2 text-gray-400 text-sm">
+                <ul className="space-y-2 text-slate-600 text-sm">
                   <li className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-blue-400" />
+                    <BookOpen className="w-4 h-4 text-indigo-600" />
                     {currentCourse?.lectures.length} lectures
                   </li>
                   <li className="flex items-center gap-2">
-                    <BarChart2 className="w-4 h-4 text-blue-400" />
+                    <BarChart2 className="w-4 h-4 text-indigo-600" />
                     <span className="capitalize">
                       {currentCourse?.level} level
                     </span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Tag className="w-4 h-4 text-blue-400" />
+                    <Tag className="w-4 h-4 text-indigo-600" />
                     {currentCourse?.category}
                   </li>
                   <li className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-blue-400" />
+                    <Clock className="w-4 h-4 text-indigo-600" />
                     Full lifetime access
                   </li>
                 </ul>

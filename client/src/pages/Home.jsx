@@ -24,38 +24,39 @@ const Home = () => {
       <Hero />
 
       {/* Featured Courses Section */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-extrabold text-white mb-1">
+            <h2 className="text-2xl font-semibold text-slate-900">
               Featured Courses
             </h2>
-            <p className="text-gray-400 text-sm">
+            <p className="text-sm text-slate-500 mt-1">
               Handpicked courses to get you started
             </p>
           </div>
           <Link
             to="/courses"
-            className="text-blue-400 hover:text-blue-300 font-semibold text-sm border border-blue-400 hover:border-blue-300 px-4 py-2 rounded-lg transition-colors duration-200"
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition"
           >
             View All →
           </Link>
         </div>
 
+        {/* Content  */}
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <p className="text-gray-400">Loading courses...</p>
+            <p className="text-sm text-slate-400">Loading courses...</p>
           </div>
         ) : featuredCourse.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredCourse.map((course) => (
               <CourseCard key={course._id} course={course} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-gray-400">No courses available yet</p>
+          <div className="text-center py-20 border border-dashed border-slate-300 rounded-xl">
+            <p className="text-sm text-slate-500">No courses available yet</p>
           </div>
         )}
       </div>

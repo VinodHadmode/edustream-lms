@@ -7,45 +7,49 @@ const CourseCard = ({ course, enrolled = false }) => {
     : `/course-detail/${course._id}`;
 
   return (
-    <Link to={path}>
-      <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transition-all duration-300 cursor-pointer h-full flex flex-col">
+    <Link to={path} className="group">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden transition hover:shadow-md">
         {/* Thumbnail */}
-        <img
-          src={
-            course.thumbnail ||
-            "https://placehold.co/600x400/1e293b/94a3b8?text=No+Thumbnail"
-          }
-          alt={course.title}
-          className="w-full h-44 object-cover"
-        />
+        <div className="h-44 w-full overflow-hidden bg-slate-100">
+          <img
+            src={
+              course.thumbnail ||
+              "https://placehold.co/600x400/1e293b/94a3b8?text=No+Thumbnail"
+            }
+            alt={course.title}
+            className="w-full h-44 object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
 
         {/* Content */}
-        <div className="p-5 flex flex-col flex-1 gap-3">
-          <h2 className="text-white font-bold text-lg leading-snug line-clamp-2">
+        <div className="p-5 flex flex-col gap-3">
+          <h2 className="text-slate-900 font-semibold text-base leading-snug line-clamp-2">
             {course.title}
           </h2>
-          <p className="text-gray-400 text-sm line-clamp-2 flex-1">
+          <p className="text-slate-600 text-sm line-clamp-2">
             {course.description || "No description available"}
           </p>
 
           {/* Instructor */}
           {course.instructor && (
-            <p className="text-gray-500 text-xs">
+            <p className="text-slate-500 text-xs">
               By{" "}
-              <span className="text-gray-300 font-medium">
+              <span className="text-slate-700 font-medium">
                 {course.instructor.name}
               </span>
             </p>
           )}
 
-          {/* Meta row */}
-          <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-700">
-            <span className="text-blue-400 font-bold text-lg">
+          {/* Meta */}
+          <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-200">
+            <span className="text-slate-900 font-semibold text-sm">
               ₹{course.price}
             </span>
-            <span className="bg-blue-500/10 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full capitalize">
-              {course.level}
-            </span>
+            {course.level && (
+              <span className="bg-blue-500/10 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full capitalize">
+                {course.level}
+              </span>
+            )}
           </div>
         </div>
       </div>

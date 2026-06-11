@@ -14,9 +14,7 @@ const {
   deleteLecture,
 } = require("../controllers/course.controller");
 
-
 const courseRouter = express.Router();
-
 
 //Instructor routes - need auth + isInstructor MW
 courseRouter.post(
@@ -46,9 +44,9 @@ courseRouter.patch(
   togglePublish,
 );
 
-//Student routes - need authMW
-courseRouter.get("/published", isAuthenticated, getPublishedCourses);
-courseRouter.get("/:courseId", isAuthenticated, getCourseById);
+//Public route
+courseRouter.get("/published", getPublishedCourses);
+courseRouter.get("/:courseId", getCourseById);
 
 //lecture routes
 courseRouter.post(

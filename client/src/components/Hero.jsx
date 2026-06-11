@@ -6,25 +6,48 @@ const Hero = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    navigate(`/courses?search=${query}`);
+  };
+
   return (
-    <div className="bg-slate-800 min-h-screen">
-      <div className="max-w-7xl mx-auto flex md:flex-row flex-col gap-10 items-center px-6 py-16">
+    <div className="bg-slate-50 border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         {/* text-section  */}
-        <div className="space-y-7 flex-1">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-200 leading-tight">
-            Explore our courses for all
+        <div className="space-y-6">
+          <h1 className="text-3xl md:text-4xl font-semibold text-slate-900 leading-tight">
+            Learn in-demand skills with expert-led courses
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="text-slate-600 text-base">
             Learn from expert instructors and build real-world skills today.
           </p>
+
+          {/* search  */}
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Search courses.."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            >
+              Search
+            </button>
+          </form>
         </div>
 
         {/* image section  */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex justify-center">
           <img
             src={Students}
-            alt="Hero"
-            className="max-w-sm md:max-w-md w-full object-contain"
+            alt="Students learning online"
+            className="w-full max-w-md object-contain rounded-2xl shadow-sm"
           />
         </div>
       </div>

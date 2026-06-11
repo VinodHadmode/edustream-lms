@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const disPatch=useDispatch()
+  const disPatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,22 +17,19 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        },
-      );
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
       if (!response.ok) {
         return toast.error(data.message || "Login Failed");
       }
 
-      disPatch(userLoggedIn(data.user))
+      disPatch(userLoggedIn(data.user));
       toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
@@ -44,21 +41,21 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-slate-300 flex items-center justify-center px-4 py-12">
-      <div className="bg-gray-900 text-gray-200 rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-white mb-2 text-center">
-          Welcome back
-        </h1>
-        <p className="text-gray-400 mb-8 text-sm text-center">
-          Please login to your account
-        </p>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 mb-2 text-center">
+            Welcome back
+          </h1>
+          <p className="text-slate-500 mt-2">Please login to your account</p>
+        </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}>
           {/* Email */}
           <div className="flex flex-col gap-1">
             <label
               htmlFor="email"
-              className="text-sm font-medium text-gray-300"
+              className="text-sm font-medium text-slate-700"
             >
               Email
             </label>
@@ -69,7 +66,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="bg-slate-700 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -77,7 +74,7 @@ const Login = () => {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-300"
+              className="text-sm font-medium text-slate-700"
             >
               Password
             </label>
@@ -88,7 +85,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="bg-slate-700 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-3 rounded-lg border border-slate-300 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -98,14 +95,14 @@ const Login = () => {
             disabled={isLoading}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
-             {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <p className="text-gray-400 text-sm text-center mt-6">
+        <p className="text-slate-500 text-sm text-center mt-6">
           Don't have an account?{" "}
           <Link
             to={"/signup"}
-            className="text-blue-400 hover:underline font-medium"
+            className="text-blue-600 hover:underline font-medium"
           >
             Signup
           </Link>

@@ -199,34 +199,33 @@ const EditCourse = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 space-y-10">
+    <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header  */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Edit Course</h1>
+          <p className="text-gray-600 text-sm mt-1">Update your details</p>
+        </div>
+
         <Link
           to="/instructor/courses"
-          className="text-gray-400 hover:text-white transition-colors duration-200"
+          className="text-sm font-medium text-blue-600 hover:text-blue-700"
         >
-          <ArrowLeft className="w-5 h-5" />
+          ← Back to Courses
         </Link>
-        <div>
-          <h1 className="text-3xl font-bold text-white">Edit Course</h1>
-          <p className="text-gray-400 text-sm mt-1">Update your details</p>
-        </div>
       </div>
 
-      {/* course details form  */}
-      <div className="bg-gray-900 rounded-2xl p-8">
-        <h2 className="text-xl font-bold text-white mb-6">Course Details</h2>
-
+      {/* Form: course details  */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
         <form onSubmit={handleUpdateCourse} className="space-y-6">
           {/* thumbnail upload */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-300">
+            <label className="text-sm font-medium text-gray-700">
               Thumbnail
             </label>
             <div
               onClick={() => document.getElementById("thumbnail").click()}
-              className="relative w-full h-52 bg-gray-900 border-2 border-dashed border-gray-700 hover:border-blue-500 transition-colors duration-200 overflow-hidden cursor-pointer"
+              className="relative w-full h-52 bg-gray-50 border-2 border-dashed border-gray-300 hover:border-blue-500 transition-colors duration-200 overflow-hidden cursor-pointer"
             >
               {thumbnailPreview ? (
                 <img
@@ -268,7 +267,7 @@ const EditCourse = () => {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="title"
-              className="text-sm font-medium text-gray-300"
+              className="text-sm font-medium text-gray-700"
             >
               Course Title <span className="text-red-400">*</span>
             </label>
@@ -278,7 +277,8 @@ const EditCourse = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="bg-slate-800 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g. System Design for Software Engineers"
+              className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -286,7 +286,7 @@ const EditCourse = () => {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="description"
-              className="text-sm font-medium text-gray-300"
+              className="text-sm font-medium text-gray-700"
             >
               Description
             </label>
@@ -297,7 +297,7 @@ const EditCourse = () => {
               onChange={handleChange}
               rows={4}
               placeholder="What will students learn in this course"
-              className="bg-slate-800 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             ></textarea>
           </div>
 
@@ -307,7 +307,7 @@ const EditCourse = () => {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="category"
-                className="text-sm font-medium text-gray-300"
+                className="text-sm font-medium text-gray-700"
               >
                 Category <span className="text-red-400">*</span>
               </label>
@@ -316,7 +316,7 @@ const EditCourse = () => {
                 id="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="bg-slate-800 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="" disabled>
                   Select Category
@@ -335,7 +335,7 @@ const EditCourse = () => {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="level"
-                className="text-sm font-medium text-gray-300"
+                className="text-sm font-medium text-gray-700"
               >
                 Level
               </label>
@@ -344,7 +344,7 @@ const EditCourse = () => {
                 id="level"
                 value={formData.level}
                 onChange={handleChange}
-                className="bg-slate-800 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="beginner">Beginner</option>
                 <option value="intermediate">Intermediate</option>
@@ -356,7 +356,7 @@ const EditCourse = () => {
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="price"
-                className="text-sm font-medium text-gray-300"
+                className="text-sm font-medium text-gray-700"
               >
                 Price (₹)
               </label>
@@ -368,16 +368,23 @@ const EditCourse = () => {
                 onChange={handleChange}
                 placeholder="e.g. 499"
                 min={0}
-                className="bg-slate-900 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
-            {/* submit  */}
-            <div className="flex justify-end">
+            {/* Form actions */}
+            <div className="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
+              <Link
+                to="/instructor/courses"
+                className="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </Link>
+
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200"
+                className="px-8 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold transition-colors"
               >
                 {isLoading ? "Saving..." : "Save Changes"}
               </button>
@@ -387,10 +394,10 @@ const EditCourse = () => {
       </div>
 
       {/* lectures section */}
-      <div className="bg-gray-900 rounded-2xl p-8">
+      <div className="bg-white border border-gray-200 rounded-2xl p-8 mt-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-white">Lectures</h2>
+            <h2 className="text-xl font-bold text-gray-900">Lectures</h2>
             <p className="text-gray-400 text-sm mt-1">
               {lectures.length} lecture{lectures.length !== 1 ? "s" : ""}
             </p>
@@ -408,13 +415,13 @@ const EditCourse = () => {
         {showLectureForm && (
           <form
             onSubmit={handleAddLecture}
-            className="bg-slate-800 rounded-xl p-6 mb-6 space-y-4"
+            className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6 space-y-4"
           >
-            <h3 className="text-white font-semibold">New Lecture</h3>
+            <h3 className="text-gray-900 font-semibold">New Lecture</h3>
 
             {/* lecture title  */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-300">
+              <label className="text-sm font-medium text-gray-700">
                 Title <span className="text-red-400">*</span>
               </label>
               <input
@@ -424,18 +431,18 @@ const EditCourse = () => {
                   setLectureData({ ...lectureData, title: e.target.value })
                 }
                 placeholder="e.g. Introduction to react"
-                className="bg-gray-900 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {/* video upload */}
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-300">Video</label>
+              <label className="text-sm font-medium text-gray-700">Video</label>
               <input
                 type="file"
                 accept="video/*"
                 onChange={(e) => setVideoFile(e.target.files[0])}
-                className="bg-gray-900 text-gray-400 px-4 py-3 rounded-lg outline-none file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:bg-blue-500 file:text-white file:text-sm cursor-pointer"
+                className="bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
               />
               {videoFile && (
                 <p className="text-gray-400 text-xs mt-1">
@@ -457,7 +464,7 @@ const EditCourse = () => {
                 }
                 className="w-4 h-4 accent-blue-500"
               />
-              <span className="text-gray-300 text-sm">Free preview</span>
+              <span className="text-gray-700 text-sm">Free preview</span>
             </label>
 
             {/* form actions  */}
@@ -465,7 +472,7 @@ const EditCourse = () => {
               <button
                 type="button"
                 onClick={() => setShowLectureForm(false)}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 rounded-lg transition-colors duration-200"
+                className="flex-1 bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Cancel
               </button>
@@ -483,19 +490,19 @@ const EditCourse = () => {
 
       {/* Lecture list  */}
       {lectures.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-3 mt-10">
           {lectures.map((lecture, index) => {
             return (
               <div
                 key={lecture._id}
-                className="flex items-center justify-between bg-slate-800 rounded-xl px-5 py-4"
+                className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-5 py-4"
               >
                 <div className="flex items-center gap-4">
                   <div className="bg-blue-500/10 p-2 rounded-lg">
-                    <Video className="w-5 h-5 text-blue-400" />
+                    <Video className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <p className="text-white font-medium text-sm">
+                    <p className="text-gray-900 font-medium text-sm">
                       {index + 1}. {lecture.title}
                     </p>
                     {lecture.isPreview && (
@@ -506,7 +513,7 @@ const EditCourse = () => {
                   </div>
                 </div>
                 <button
-                  className="text-red-400 hover:text-red-300 transition-colors duration-200"
+                  className="text-red-400 hover:text-red-500 transition-colors duration-200"
                   title="Delete Lecture"
                   onClick={() => handleDeleteLecture(lecture._id)}
                 >
@@ -518,7 +525,7 @@ const EditCourse = () => {
         </div>
       ) : (
         <div className="text-center py-10">
-          <Video className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+          <Video className="w-10 h-10 text-gray-400 mx-auto mb-3" />
           <p className="text-gray-500 text-sm">
             No lectures yet — add your first one above
           </p>

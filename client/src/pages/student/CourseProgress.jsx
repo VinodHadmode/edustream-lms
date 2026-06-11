@@ -17,9 +17,6 @@ const CourseProgress = () => {
     fetchCourseProgress();
   }, [courseId]);
 
-  console.log("course", course);
-  console.log("progress", progress);
-
   const isLectureCompleted = (lectureId) => {
     return progress?.completedLectures?.some(
       (id) => id.toString() === lectureId.toString(),
@@ -103,16 +100,19 @@ const CourseProgress = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-8">
       {/* Header  */}
-      <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-gray-400 hover:text-white transition-colors"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-white">{course?.title}</h1>
-          <p className="text-gray-400 text-sm mt-0.5">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 text-sm text-gray-400 hover:text-white mb-1"
+          >
+            ← Back to courses
+          </button>
+
+          <h1 className="text-xl md:text-2xl font-bold text-slate-900">
+            {course?.title}
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">
             {progress?.completedLectures?.length || 0} of{" "}
             {course.lectures.length} lectures completed
           </p>
@@ -132,31 +132,30 @@ const CourseProgress = () => {
         </div>
       </div>
 
+      {/* main content  */}
       <div className="flex flex-col lg:flex-row gap-6">
         {/* left - video player */}
-        <div className="flex-1 space-y-4">
+        <div className="flex-1">
           {currentLecture ? (
-            <>
+            <div className="bg-gray-900 rounded-2xl overflow-hidden">
               {/* video  */}
-              <div className="bg-black rounded-2xl overflow-hidden aspect-video">
+              <div className="bg-black aspect-video">
                 <video
                   key={currentLecture._id}
                   src={currentLecture.videoUrl}
                   controls
                   controlsList="nodownload"
                   crossOrigin="anonymous"
+                  className="w-full h-full"
                   onError={(e) => {
                     console.log("Video error:", e);
                     toast.error("Failed to load video");
                   }}
-                  className="w-full h-full"
-                >
-                  Your browser does not support the video tag
-                </video>
+                />
               </div>
 
               {/* Current lecture info  */}
-              <div className="bg-gray-900 rounded-2xl p-5 flex items-center justify-between">
+              <div className="p-5 flex items-center justify-between border-t border-gray-800">
                 <div>
                   <p className="text-white font-semibold">
                     {currentLecture?.title}
@@ -172,22 +171,18 @@ const CourseProgress = () => {
                 </div>
                 <button
                   onClick={() => handleToggleComplete(currentLecture._id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isLectureCompleted(currentLecture._id) ? "bg-green-500/10 text-green-400 hover:bg-green-500/20" : "bg-blue-500 hover:bg-blue-600 text-white"}`}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                    isLectureCompleted(currentLecture._id)
+                      ? "bg-green-500/10 text-green-400 hover:bg-green-500/20"
+                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                  }`}
                 >
-                  {isLectureCompleted(currentLecture._id) ? (
-                    <>
-                      <CheckCircle className="w-4 h-4" />
-                      Completed
-                    </>
-                  ) : (
-                    <>
-                      <Circle className="w-4 h-4" />
-                      Mark Complete
-                    </>
-                  )}
+                  {isLectureCompleted(currentLecture._id)
+                    ? "Completed"
+                    : "Mark Complete"}
                 </button>
               </div>
-            </>
+            </div>
           ) : (
             <div className="bg-gray-900 rounded-2xl aspect-video flex items-center justify-center">
               <p className="text-gray-500">No lectures available</p>
@@ -199,8 +194,13 @@ const CourseProgress = () => {
         <div className="lg:w-80 shrink-0">
           <div className="bg-gray-900 rounded-2xl overflow-hidden">
             {/* List Header  */}
-            <div className="px-5 py-4 border-b border-gray-700">
-              <h2 className="text-white font-bold">Course Content</h2>
+            <div className="px-5 py-4 border-b border-gray-800">
+              <h2 className="text-white font-bold flex items-center gap-2">
+                Course Content
+                <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full">
+                  {course?.lectures.length}
+                </span>
+              </h2>
               <p className="text-gray-400 text-xs mt-1">
                 {course?.lectures.length} lectures
               </p>
@@ -246,11 +246,13 @@ const CourseProgress = () => {
 
           {/* Course completed message  */}
           {progress?.completed && (
-            <div className="mt-4 bg-green-500/10 border border-green-500/30 rounded-2xl p-4 text-center">
-              <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
-              <p className="text-green-400 font-semibold">Course Completed</p>
-              <p className="text-gray-400 text-xs mt-1">
-                You've completed all lectures
+            <div className="mt-4 bg-green-500/10 border border-green-500/30 rounded-2xl p-5 text-center">
+              <CheckCircle className="w-10 h-10 text-green-400 mx-auto mb-2" />
+              <p className="text-green-400 font-semibold text-lg">
+                Course Completed 🎉
+              </p>
+              <p className="text-gray-400 text-sm mt-1">
+                You have completed all lectures
               </p>
             </div>
           )}

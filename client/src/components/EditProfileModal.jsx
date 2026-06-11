@@ -6,11 +6,11 @@ import { userLoggedIn } from "../redux/authSlice";
 
 const EditProfileModal = ({ onClose }) => {
   const { user } = useSelector((store) => store.auth);
-  
+
   const [photoFile, setPhotoFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [previewPhoto, setPreviewPhoto] = useState(user?.photoUrl || null);
-  
+
   const [formData, setFormData] = useState({
     name: user?.name || "",
     description: user?.description || "",
@@ -40,8 +40,8 @@ const EditProfileModal = ({ onClose }) => {
       form.append("description", formData.description);
       if (photoFile) form.append("photo", photoFile);
 
-      console.log('form', form);
-      
+      console.log("form", form);
+
       const response = await fetch(
         "http://localhost:3000/api/user/profile-update",
         {
@@ -69,23 +69,23 @@ const EditProfileModal = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4"
+      className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4"
       onClick={onClose}
     >
       {/* Modal box — stop click from bubbling to backdrop */}
       <div
-        className="bg-gray-900 rounded-2xl p-8 w-full max-w-md shadow-2xl relative"
+        className="bg-white rounded-2xl p-8 w-full max-w-md shadow-xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* close button  */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-2xl font-bold text-white mb-6">Edit Profile</h2>
+        <h2 className="text-2xl text-center font-bold text-gray-900 mb-6">Edit Profile</h2>
 
         {/* edit form  */}
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -99,7 +99,7 @@ const EditProfileModal = ({ onClose }) => {
               />
               <label
                 htmlFor="photo"
-                className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded-full cursor-pointer transition-colors"
+                className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full cursor-pointer transition"
               >
                 <Camera className="w-4 h-4" />
               </label>
@@ -118,7 +118,7 @@ const EditProfileModal = ({ onClose }) => {
 
           {/* name  */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="name" className="text-sm font-medium text-gray-300">
+            <label htmlFor="name" className="text-sm font-medium text-gray-700">
               Full Name
             </label>
             <input
@@ -128,7 +128,7 @@ const EditProfileModal = ({ onClose }) => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter your name"
-              className="bg-slate-700 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 px-4 py-3 rounded-lg text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -136,7 +136,7 @@ const EditProfileModal = ({ onClose }) => {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="description"
-              className="text-sm font-medium text-gray-300"
+              className="text-sm font-medium text-gray-700"
             >
               Bio
             </label>
@@ -147,7 +147,7 @@ const EditProfileModal = ({ onClose }) => {
               placeholder="Add about yourself..."
               rows={3}
               onChange={handleChange}
-              className="bg-slate-700 text-white placeholder:text-gray-500 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="border border-gray-300 px-4 py-3 rounded-lg text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
             />
           </div>
 
@@ -156,14 +156,14 @@ const EditProfileModal = ({ onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+              className="flex-1 border border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold py-3 rounded-lg transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition"
             >
               {isLoading ? "Saving.." : "Save Changes"}
             </button>

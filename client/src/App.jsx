@@ -40,15 +40,19 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
       <Toaster position="top-center" />
       <main className="flex-1">
-        {/* this is where home, about login page will show */}
-        <Outlet />
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          {/* Routed pages will render here  */}
+          <Outlet />
+        </div>
       </main>
-      <footer className="bg-gray-900 text-gray-400 text-center py-4">
-        <p>© 2025 EduFlow. All rights reserved.</p>
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-slate-500">
+          © 2026 EduStream. All rights reserved.
+        </div>
       </footer>
     </div>
   );
