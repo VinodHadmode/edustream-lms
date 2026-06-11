@@ -4,6 +4,7 @@ import { Link, useNavigate, NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { userLoggedOut } from "../redux/authSlice";
 import toast from "react-hot-toast";
+import { SERVER_URL } from "../utils/constants";
 
 const Navbar = () => {
   const { user } = useSelector((state) => {
@@ -16,7 +17,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3000/api/auth/logout", {
+    await fetch(`${SERVER_URL}/api/auth/logout`, {
       method: "GET",
       credentials: "include",
     });
@@ -114,7 +115,7 @@ const Navbar = () => {
             >
               Course
             </NavLink>
-            
+
             <NavLink
               to="/courses"
               onClick={() => setOpen(false)}

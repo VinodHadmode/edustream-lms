@@ -4,6 +4,7 @@ import { Outlet } from "react-router";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { SERVER_URL } from "./utils/constants";
 import {
   authInitialized,
   userLoggedIn,
@@ -19,7 +20,7 @@ const App = () => {
 
   const fetchUser = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/user/profile", {
+      const res = await fetch(`${SERVER_URL}/api/user/profile`, {
         credentials: "include",
       });
 

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { SERVER_URL } from "../utils/constants";
 
-const BASE_URL = "http://localhost:3000/api/course";
+const BASE_URL = `${SERVER_URL}/api/course`;
 
 //async thunk
 export const fetchPublishedCourse = createAsyncThunk(

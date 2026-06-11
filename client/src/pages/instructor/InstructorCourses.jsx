@@ -17,6 +17,7 @@ import {
   removeCourse,
   toggleCoursePublish,
 } from "../../redux/courseSlice";
+import { SERVER_URL } from "../../utils/constants";
 
 const InstructorCourses = () => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const InstructorCourses = () => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
     try {
       const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}`,
+        `${SERVER_URL}/api/course/${courseId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -55,7 +56,7 @@ const InstructorCourses = () => {
   const handleTogglePublish = async (courseId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}/toggle-publish`,
+        `${SERVER_URL}/api/course/${courseId}/toggle-publish`,
         {
           method: "PATCH",
           credentials: "include",

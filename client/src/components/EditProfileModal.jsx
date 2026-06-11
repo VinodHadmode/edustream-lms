@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { userLoggedIn } from "../redux/authSlice";
+import { SERVER_URL } from "../utils/constants";
 
 const EditProfileModal = ({ onClose }) => {
   const { user } = useSelector((store) => store.auth);
@@ -42,14 +43,11 @@ const EditProfileModal = ({ onClose }) => {
 
       console.log("form", form);
 
-      const response = await fetch(
-        "http://localhost:3000/api/user/profile-update",
-        {
-          method: "PATCH",
-          credentials: "include",
-          body: form,
-        },
-      );
+      const response = await fetch(`${SERVER_URL}/api/user/profile-update`, {
+        method: "PATCH",
+        credentials: "include",
+        body: form,
+      });
       const data = await response.json();
       if (!response.ok) {
         toast.error(data.message || "Update failed");
@@ -85,7 +83,9 @@ const EditProfileModal = ({ onClose }) => {
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-2xl text-center font-bold text-gray-900 mb-6">Edit Profile</h2>
+        <h2 className="text-2xl text-center font-bold text-gray-900 mb-6">
+          Edit Profile
+        </h2>
 
         {/* edit form  */}
         <form onSubmit={handleSubmit} className="space-y-5">

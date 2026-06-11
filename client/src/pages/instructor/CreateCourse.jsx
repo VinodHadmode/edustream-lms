@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Upload } from "lucide-react";
 import toast from "react-hot-toast";
+import { SERVER_URL } from "../../utils/constants";
 
 const categories = [
   "Web Development",
@@ -59,7 +60,7 @@ const CreateCourse = () => {
 
       if (thumbnail) form.append("thumbnail", thumbnail);
 
-      const response = await fetch("http://localhost:3000/api/course", {
+      const response = await fetch(`${SERVER_URL}/api/course`, {
         method: "POST",
         credentials: "include",
         body: form,

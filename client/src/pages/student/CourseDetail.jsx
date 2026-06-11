@@ -12,6 +12,7 @@ import {
   Tag,
 } from "lucide-react";
 import { fetchCourseById } from "../../redux/courseSlice";
+import { SERVER_URL } from "../../utils/constants";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
@@ -34,15 +35,12 @@ const CourseDetail = () => {
 
     try {
       //step 1 - Create order on backend
-      const response = await fetch(
-        "http://localhost:3000/api/payment/create-order",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ courseId }),
-        },
-      );
+      const response = await fetch(`${SERVER_URL}/api/payment/create-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ courseId }),
+      });
 
       const data = await response.json();
       if (!response.ok) {
@@ -55,7 +53,7 @@ const CourseDetail = () => {
         key: data.key,
         amount: data.order.amount,
         currency: data.order.currency,
-        name: "EduFlow",
+        name: "EduStream",
         description: data.course.title,
         image: data.course.thumbnail,
         order_id: data.order.id,
@@ -66,7 +64,7 @@ const CourseDetail = () => {
 
           try {
             const verifyRes = await fetch(
-              "http://localhost:3000/api/payment/verify",
+              `${SERVER_URL}/api/payment/verify`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { SERVER_URL } from "../../utils/constants";
 
 const CourseProgress = () => {
   const { courseId } = useParams();
@@ -34,7 +35,7 @@ const CourseProgress = () => {
   const handleToggleComplete = async (lectureId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/progress/${courseId}/lectures/${lectureId}`,
+        `${SERVER_URL}/api/progress/${courseId}/lectures/${lectureId}`,
         {
           method: "POST",
           credentials: "include",
@@ -55,7 +56,7 @@ const CourseProgress = () => {
   const fetchCourseProgress = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/progress/${courseId}`,
+        `${SERVER_URL}/api/progress/${courseId}`,
         {
           credentials: "include",
         },

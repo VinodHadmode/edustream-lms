@@ -2,6 +2,7 @@ import { BookOpen, PlusCircle, TrendingUp, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { toast } from "react-hot-toast";
+import { SERVER_URL } from "../../utils/constants";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -15,7 +16,7 @@ const Dashboard = () => {
   const fetchDashboard = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/course/instructor/dashboard",
+        `${SERVER_URL}/api/course/instructor/dashboard`,
         {
           credentials: "include",
         },
@@ -133,7 +134,7 @@ const Dashboard = () => {
         {courseStats.length > 0 ? (
           <>
             {/* Table Header */}
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 text-gray-500 text-xs font-semibold uppercase mt-10">
+            <div className="grid grid-cols-12 gap-4 px-6 py-3 text-gray-600 text-xs font-semibold uppercase mt-10">
               <div className="col-span-5">Course</div>
               <div className="col-span-2 text-center">Status</div>
               <div className="col-span-2 text-center">Students</div>

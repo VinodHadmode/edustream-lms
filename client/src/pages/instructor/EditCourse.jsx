@@ -11,6 +11,7 @@ import {
   Video,
 } from "lucide-react";
 import { fetchCourseById } from "../../redux/courseSlice";
+import { SERVER_URL } from "../../utils/constants";
 
 const categories = [
   "Web Development",
@@ -100,14 +101,11 @@ const EditCourse = () => {
       form.append("price", formData.price);
       if (thumbnail) form.append("thumbnail", thumbnail);
 
-      const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}`,
-        {
-          method: "PUT",
-          credentials: "include",
-          body: form,
-        },
-      );
+      const response = await fetch(`${SERVER_URL}/api/course/${courseId}`, {
+        method: "PUT",
+        credentials: "include",
+        body: form,
+      });
 
       const data = await response.json();
       if (!response.ok) {
@@ -139,7 +137,7 @@ const EditCourse = () => {
       if (videoFile) form.append("video", videoFile);
 
       const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}/lectures`,
+        `${SERVER_URL}/api/course/${courseId}/lectures`,
         {
           method: "POST",
           credentials: "include",
@@ -169,7 +167,7 @@ const EditCourse = () => {
     if (!window.confirm("Delete this lecture?")) return;
     try {
       const response = await fetch(
-        `http://localhost:3000/api/course/${courseId}/lectures/${lectureId}`,
+        `${SERVER_URL}/api/course/${courseId}/lectures/${lectureId}`,
         {
           method: "DELETE",
           credentials: "include",

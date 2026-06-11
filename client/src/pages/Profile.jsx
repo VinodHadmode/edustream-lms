@@ -8,6 +8,7 @@ import EditProfileModal from "../components/EditProfileModal";
 import { fetchInstructorCourses } from "../redux/courseSlice";
 import { userLoggedIn } from "../redux/authSlice";
 import toast from "react-hot-toast";
+import { SERVER_URL } from "../utils/constants";
 
 const Profile = () => {
   const { user } = useSelector((store) => store.auth);
@@ -30,7 +31,7 @@ const Profile = () => {
   const fetchEnrolledCourses = async () => {
     setLoadingCourses(true);
     try {
-      const response = await fetch("http://localhost:3000/api/user/profile", {
+      const response = await fetch(`${SERVER_URL}/api/user/profile`, {
         credentials: "include",
       });
 
