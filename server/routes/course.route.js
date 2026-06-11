@@ -12,6 +12,7 @@ const {
   togglePublish,
   addLecture,
   deleteLecture,
+  getInstructorDashboard,
 } = require("../controllers/course.controller");
 
 const courseRouter = express.Router();
@@ -42,6 +43,13 @@ courseRouter.patch(
   isAuthenticated,
   isInstructor,
   togglePublish,
+);
+
+courseRouter.get(
+  "/instructor/dashboard",
+  isAuthenticated,
+  isInstructor,
+  getInstructorDashboard,
 );
 
 //Public route

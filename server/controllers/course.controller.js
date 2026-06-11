@@ -1,5 +1,6 @@
 const { cloudinary } = require("../config/cloudinary");
 const { CourseModel } = require("../models/course.model");
+const { CoursePurchaseModel } = require("../models/coursePurchase.model");
 const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
 
 //Create course
@@ -60,6 +61,58 @@ const getInstructorCourses = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Failed to fetch course" });
+  }
+};
+
+// Get instructor dashboard
+const getInstructorDashboard = async (req, res) => {
+  try {
+    const courses = await CourseModel.find({ instructor: req.user._id });
+
+    const totalCourses = courses.length;
+    const publishedCourses = courses.filter((c) => c.isPublished).length;
+    const totalStudents = courses.reduce(
+      (acc, course) => acc + course.enrolledStudents.length,
+      0,
+    );
+
+    // Total revenue from completed purchases
+    const courseIds = courses.map((c) => c._id);
+    const purchases = await CoursePurchaseModel.find({
+      course: { $in: courseIds },
+      status: "completed",
+    });
+    const totalRevenue = purchases.reduce((acc, p) => acc + p.amount, 0);
+
+    // Per course stats
+    const courseStats = courses.map((course) => ({
+      _id: course._id,
+      title: course.title,
+      thumbnail: course.thumbnail,
+      isPublished: course.isPublished,
+      price: course.price,
+      enrolledStudents: course.enrolledStudents.length,
+      revenue: purchases
+        .filter((p) => p.course.toString() === course._id.toString())
+        .reduce((acc, p) => acc + p.amount, 0),
+    }));
+
+    return res.status(200).json({
+      success: true,
+      stats: {
+        totalCourses,
+        publishedCourses,
+        totalStudents,
+        totalRevenue,
+      },
+      courseStats,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch dashboard data",
+    });
   }
 };
 
@@ -347,6 +400,7 @@ const deleteLecture = async (req, res) => {
 module.exports = {
   createCourse,
   getInstructorCourses,
+  getInstructorDashboard,
   getCourseById,
   updateCourse,
   deleteCourse,

@@ -30,7 +30,7 @@ const Navbar = () => {
     `text-sm font-medium ${isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600"} transition-colors`;
 
   return (
-    <header className="sticky top-0 bg-white border-b">
+    <header className="sticky top-0 bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* logo section  */}
