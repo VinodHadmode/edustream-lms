@@ -1,5 +1,5 @@
-import React from "react";
-import { BookOpen, UserCircle } from "lucide-react";
+import React, { use, useState } from "react";
+import { BookOpen, Menu, UserCircle, X } from "lucide-react";
 import { Link, useNavigate, NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { userLoggedOut } from "../redux/authSlice";
@@ -9,6 +9,8 @@ const Navbar = () => {
   const { user } = useSelector((state) => {
     return state.auth;
   });
+
+  const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,82 +23,156 @@ const Navbar = () => {
     dispatch(userLoggedOut());
     toast.success("Logged out successfully!");
     navigate("/");
+    setOpen(false);
   };
 
-  const navLinkClass = ({ isActive }) => {
-    isActive
-      ? "text-white"
-      : "text-gray-400 hover:text-white transition-colors duration-200";
-  };
+  const navLinkClass = ({ isActive }) =>
+    `text-sm font-medium ${isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600"} transition-colors`;
 
   return (
-    <div className="bg-gray-900 w-full sticky top-0 z-50 border-b border-gray-800">
-      <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-6">
-        {/* logo section  */}
-        <Link to={"/"} className="flex items-center gap-2">
-          <BookOpen className="text-blue-400 w-8 h-8" />
-          <h1 className="text-white text-2xl font-bold">EduFlow</h1>
-        </Link>
+    <header className="sticky top-0 bg-white border-b">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* logo section  */}
+          <Link to="/" className="flex items-center gap-2">
+            <BookOpen className="text-blue-600 w-8 h-8" />
+            <span className="text-xl font-bold text-blue-600">EduStream</span>
+          </Link>
 
-        {/* menu section  */}
-        <ul className="flex gap-7 text-white items-center font-semibold">
-          <li>
-            <NavLink to={"/"} className={navLinkClass}>
+          {/* Desktop menu  */}
+          <nav className="hidden md:flex items-center gap-8">
+            <NavLink to="/" className={navLinkClass}>
               Home
             </NavLink>
-          </li>
-
-          <li>
-            <NavLink to={"/courses"} className={navLinkClass}>
+            <NavLink to="/courses" className={navLinkClass}>
               Courses
             </NavLink>
-          </li>
 
-          {user?.role === "instructor" && (
-            <li>
+            {user?.role === "instructor" && (
               <NavLink to="/instructor/dashboard" className={navLinkClass}>
                 Dashboard
               </NavLink>
-            </li>
-          )}
+            )}
+          </nav>
 
-          {!user ? (
-            <li className="flex gap-3">
-              <Link to="/signup">
-                <button className="bg-blue-500 hover:bg-blue-600  text-white px-4 py-2 rounded transition-colors duration-200">
-                  Signup
-                </button>
-              </Link>
-              <Link to={"/login"}>
-                <button className="bg-gray-500 hover:bg-gray-800  text-white px-4 py-2 rounded transition-colors duration-200">
+          {/* Desktop actions  */}
+          <div className="hidden md:flex items-center gap-4">
+            {!user ? (
+              <>
+                <Link
+                  to="/login"
+                  className="text-sm font-medium text-gray-600 hover:text-blue-600"
+                >
                   Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md"
+                >
+                  Signup
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/profile">
+                  {user?.photoUrl ? (
+                    <img
+                      src={user.photoUrl}
+                      alt={user.name}
+                      className="w-9 h-9 rounded-full object-cover border"
+                    />
+                  ) : (
+                    <UserCircle className="w-9 h-9 text-gray-500" />
+                  )}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-red-600 hover:text-red-700"
+                >
+                  Logout
                 </button>
-              </Link>
-            </li>
-          ) : (
-            <li className="flex items-center gap-4">
-              <Link to="/profile">
-                {user?.photoUrl ? (
-                  <img
-                    src={user.photoUrl}
-                    alt={user.name}
-                    className="w-9 h-9 rounded-full object-cover border-2 border-blue-500 hover:border-blue-400 transition-colors duration-200"
-                  />
-                ) : (
-                  <UserCircle className="w-9 h-9 text-gray-300 hover:text-white transition-colors duration-200" />
-                )}
-              </Link>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors duration-200"
-                onClick={handleLogout}
+              </>
+            )}
+          </div>
+
+          {/* Mobile menu button  */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden text-gray-700"
+          >
+            {open ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* mobile menu  */}
+        {open && (
+          <div className="md:hidden border-t py-4 space-y-4">
+            <NavLink
+              to="/"
+              onClick={() => setOpen(false)}
+              className={navLinkClass}
+            >
+              Course
+            </NavLink>
+            
+            <NavLink
+              to="/courses"
+              onClick={() => setOpen(false)}
+              className={navLinkClass}
+            >
+              Home
+            </NavLink>
+
+            {user?.role === "instructor" && (
+              <NavLink
+                to="/instructor/dashboard"
+                onClick={() => setOpen(false)}
+                className={navLinkClass}
               >
-                Logout
-              </button>
-            </li>
-          )}
-        </ul>
+                Dashboard
+              </NavLink>
+            )}
+
+            <div className="pt-4 border-t flex flex-col gap-3">
+              {!user ? (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="text-sm font-medium text-gray-600"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setOpen(false)}
+                    className="bg-blue-600 text-white text-center text-sm font-medium py-2 rounded-md"
+                  >
+                    Signup
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={() => setOpen(false)}
+                    className="text-sm font-medium text-gray-600"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-left text-sm font-medium text-red-600"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </header>
   );
 };
 
