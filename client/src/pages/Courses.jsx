@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import CourseCard from "../components/CourseCard";
 import { fetchPublishedCourse } from "../redux/courseSlice";
+import Loader from "../components/Loader";
 
 const Courses = () => {
   const dispatch = useDispatch();
@@ -21,11 +22,7 @@ const Courses = () => {
   });
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400">Loading courses...</p>
-      </div>
-    );
+    return <Loader label="Loading courses..." />;
   }
 
   return (

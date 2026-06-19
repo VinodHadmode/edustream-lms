@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { fetchCourseById } from "../../redux/courseSlice";
 import { SERVER_URL } from "../../utils/constants";
+import Loader from "../../components/Loader";
 
 const categories = [
   "Web Development",
@@ -189,11 +190,7 @@ const EditCourse = () => {
   };
 
   if (isFetching || loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400">Loading course...</p>
-      </div>
-    );
+    return <Loader label="Loading courses.." />;
   }
 
   return (

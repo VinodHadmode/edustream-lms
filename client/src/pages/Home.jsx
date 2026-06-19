@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPublishedCourse } from "../redux/courseSlice";
 import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 
 const Home = () => {
   // const [search, setSearch] = useState("");
@@ -45,8 +46,8 @@ const Home = () => {
 
         {/* Content  */}
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <p className="text-sm text-slate-400">Loading courses...</p>
+          <div>
+            <Loader label="Loading courses.." />
           </div>
         ) : featuredCourse.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
